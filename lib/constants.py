@@ -1,7 +1,9 @@
 import jax.numpy as np
 
-dt = 0.1
-dx = 0.01
+Lx = 17
+dim = 500
+dx = 2 * Lx / dim
+dt = 0.001
 xMin = -10
 xMax = 10
 
