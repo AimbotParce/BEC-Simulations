@@ -10,7 +10,12 @@ import matplotlib.pyplot as plt
 
 @jax.jit
 def hamiltonian(psi, dx):
-    return -jnp.gradient(jnp.gradient(psi, dx), dx)
+    re = jnp.real(psi)
+    im = jnp.imag(psi)
+
+    laplacianRe = jnp.gradient(jnp.gradient(re, dx), dx)
+    laplacianIm = jnp.gradient(jnp.gradient(im, dx), dx)
+    return -1j * (laplacianRe + laplacianIm) - 1j * (re**2 + im**2) * psi
 
 
 # @jax.jit
@@ -37,7 +42,7 @@ imag.set_data(x, jnp.imag(psi))
 plt.show()
 
 while True:
-    nxt = nextPsi(psi, 0.01, 0.00005)
+    nxt = nextPsi(psi, 0.01, 0.00001)
     psi = nxt
     probability.set_data(x, jnp.abs(psi) ** 2)
     real.set_data(x, jnp.real(psi))
