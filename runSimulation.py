@@ -1,11 +1,8 @@
 import logging as log
-import os
-from datetime import datetime
 
 import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
-import numpy
 from tqdm import tqdm
 
 import lib.constants as constants
@@ -116,7 +113,7 @@ def main():
     psi = jnp.zeros((constants.tCount, len(x)), dtype=jnp.complex64)
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
 
-    for t in tqdm(range(constants.tCount - 1)):
+    for t in tqdm(range(constants.tCount - 1), desc="Simulation"):
         Bvar = computeVariableRight(constants.dx, constants.g, constants.ns, psi[t])
         right = (Bconst + Bvar) @ psi[t]
         psi = psi.at[t + 1].set(jnp.linalg.solve(A, right))
@@ -155,7 +152,7 @@ def main():
     plt.ion()
     plt.show()
 
-    for t in range(0, constants.tCount, constants.plotStep):
+    for t in tqdm(range(0, constants.tCount, constants.plotStep), desc="Plotting"):
         time = t * constants.dt + constants.tMin
 
         # Update texts
