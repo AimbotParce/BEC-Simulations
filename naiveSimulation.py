@@ -20,7 +20,8 @@ def nextPsi(psi, dx, dt):
 
 p = 1
 x = jnp.arange(-100, 100, 0.01)
-psi = jnp.exp(-((x / 2) ** 2) - 1j * p * x) / jnp.sqrt(2 * jnp.pi)
+# psi = jnp.exp(-((x / 2) ** 2) - 1j * p * x) / jnp.sqrt(2 * jnp.pi)
+psi = jnp.exp(-((x - 7) ** 2) / 4 - 1j * p * x) / (2 * jnp.pi) ** (1 / 4)
 
 # plot
 plt.ion()
