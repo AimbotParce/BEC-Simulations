@@ -12,17 +12,12 @@ from lib import constants
 
 @jax.jit
 def hamiltonian(psi, dx):
-    re = jnp.real(psi)
-    im = jnp.imag(psi)
-
-    laplacianRe = jnp.gradient(jnp.gradient(re, dx), dx)
-    laplacianIm = jnp.gradient(jnp.gradient(im, dx), dx)
-    return -laplacianRe - 1j * laplacianIm
+    return -constants.hbar**2 / (2 * constants.m) * jnp.gradient(jnp.gradient(psi, dx), dx)
 
 
 # @jax.jit
 def nextPsi(psi, dx, dt):
-    return psi - dt * 1j * hamiltonian(psi, dx)
+    return psi - dt * 1j * hamiltonian(psi, dx) / constants.hbar
 
 
 p = 1

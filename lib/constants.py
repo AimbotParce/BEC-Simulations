@@ -9,3 +9,5 @@ xMax = 10
 
 g = 1
 ns = 1
+hbar = 1
+m = 1
