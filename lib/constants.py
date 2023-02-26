@@ -1,16 +1,33 @@
 import jax.numpy as np
 
-Lx = 30
-dim = 500
-dx = 2 * Lx / dim
+# Space and time steps [m] and [s]
+dx = 0.1
 dt = 0.0001
-Lt = 3
-dimT = int(Lt / dt)
+r = dt / (dx**2)
 
+# Space interval [m]
 xMin = -10
 xMax = 10
 
-g = 1
+# Time interval [s]
+tMin = 0
+tMax = 1
+
+# Number of space and time steps
+xCount = int((xMax - xMin) / dx)
+tCount = int((tMax - tMin) / dt)
+
+# Constants
+g = -10
 ns = 1
+mu = g * ns
 hbar = 1
 m = 1
+velocity = 1
+
+
+# Plot constants
+plotStep = 1  # Plot every plotStep time steps
+plotYMax = 2
+plotYMin = -2
+plotPause = 0.001
