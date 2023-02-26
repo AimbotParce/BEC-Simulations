@@ -36,9 +36,13 @@ probability.set_data(x, jnp.abs(psi) ** 2)
 real.set_data(x, jnp.real(psi))
 imag.set_data(x, jnp.imag(psi))
 
-plt.show()
 
+plt.show()
+t = 0.0
+timeText = axis.text(0.02, 0.95, "", transform=axis.transAxes)
 while True:
+    t += constants.dt
+    timeText.set_text("time = %.3f" % t)
     nxt = nextPsi(psi, constants.dx, constants.dt)
     psi = nxt
     probability.set_data(x, jnp.abs(psi) ** 2)
