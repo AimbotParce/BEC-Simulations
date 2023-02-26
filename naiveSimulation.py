@@ -2,6 +2,7 @@ import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
 
+j = jnp.complex(0, 1)
 # @jax.jit
 # def hamiltonian(psi, dx):
 #     return 1j * jnp.gradient(jnp.gradient(psi, dx), dx) - 1j * jnp.abs(psi) ** 2 * psi
@@ -14,12 +15,12 @@ def hamiltonian(psi, dx):
 
 # @jax.jit
 def nextPsi(psi, dx, dt):
-    return psi - dt * 1j * hamiltonian(psi, dx)
+    return psi - dt * j * hamiltonian(psi, dx)
 
 
 p = 1
 x = jnp.arange(-100, 100, 0.01)
-psi = jnp.exp(-((x / 2) ** 2) - 1j * p * x) / jnp.sqrt(2 * jnp.pi)
+psi = jnp.exp(-((x / 2) ** 2) - j * p * x) / jnp.sqrt(2 * jnp.pi)
 
 # plot
 plt.ion()
