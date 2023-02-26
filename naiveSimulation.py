@@ -28,7 +28,7 @@ psi = jnp.zeros((constants.dimT, *x.shape))
 psi.at[0].set(jnp.exp(-((x - 7) ** 2) / 4 - 1j * p * x) / (2 * jnp.pi) ** (1 / 4))
 
 
-for i in range(constants.dimtT - 1):
+for i in range(constants.dimT - 1):
     psi.at[i + 1].set(nextPsi(psi[i], constants.dx, constants.dt))
 
 
@@ -54,7 +54,7 @@ def update(frame):
 animation = FuncAnimation(
     fig,
     update,
-    frames=range(constants.dimtT - 1),
+    frames=range(constants.dimT - 1),
     init_func=init,
     blit=True,
 )
