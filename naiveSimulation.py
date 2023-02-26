@@ -24,7 +24,7 @@ def nextPsi(psi, dx, dt):
 p = 1
 x = jnp.arange(-constants.Lx / 2, constants.Lx / 2, constants.dx)
 # psi = jnp.exp(-((x / 2) ** 2) - 1j * p * x) / jnp.sqrt(2 * jnp.pi)
-psi = jnp.zeros((constants.dimT, *x.shape))
+psi = jnp.zeros((constants.dimT, *x.shape), dtype=jnp.complex64)
 psi.at[0].set(jnp.exp(-((x - 7) ** 2) / 4 - 1j * p * x) / (2 * jnp.pi) ** (1 / 4))
 
 
