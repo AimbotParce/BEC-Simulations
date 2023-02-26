@@ -15,7 +15,7 @@ def hamiltonian(psi, dx):
 
     laplacianRe = jnp.gradient(jnp.gradient(re, dx), dx)
     laplacianIm = jnp.gradient(jnp.gradient(im, dx), dx)
-    return -1j * (laplacianRe + laplacianIm) - 1j * (re**2 + im**2) * psi
+    return -laplacianRe - 1j * laplacianIm
 
 
 # @jax.jit
