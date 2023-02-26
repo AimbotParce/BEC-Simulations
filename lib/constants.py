@@ -18,7 +18,7 @@ xCount = int((xMax - xMin) / dx)
 tCount = int((tMax - tMin) / dt)
 
 # Constants
-g = 10
+g = -100
 ns = 1
 mu = g * ns
 hbar = 1

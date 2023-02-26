@@ -87,6 +87,12 @@ def brightSolitonWiki(x, time=0):
     return timeIndependent * timeDependency
 
 
+def darkSolitonWiki(x, time=0):
+    timeIndependent = jnp.tanh(x)
+    timeDependency = 1
+    return timeIndependent * timeDependency
+
+
 def randomGaussian(x, time=0):
     return jnp.exp(-((x) ** 2) / 4 - 1j * x) / (2 * jnp.pi) ** (1 / 4)
 
@@ -108,7 +114,7 @@ def main():
 
     log.info("Running the simulation...")
 
-    waveFunctionGenerator = brightSolitonWiki
+    waveFunctionGenerator = darkSolitonWiki
 
     psi = jnp.zeros((constants.tCount, len(x)), dtype=jnp.complex64)
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
