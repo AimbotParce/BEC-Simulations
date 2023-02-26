@@ -13,10 +13,11 @@ from lib.managers.logging import setupLog
 
 
 @jax.jit
-def computeConstantRight(x, r, interactionConstant, baseDensity, potential):
+def computeConstantRight(x, dx, r, interactionConstant, baseDensity, potential):
     result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
     mainDiagonal = (
-        jnp.ones(len(x), dtype=jnp.complex64) * (1j / r + 1) + potential / jnp.abs(interactionConstant) / baseDensity
+        jnp.ones(len(x), dtype=jnp.complex64) * (1j / r + 1)
+        + dx**2 * potential / jnp.abs(interactionConstant) / baseDensity
     )
     indices = jnp.diag_indices(len(x))
     result = result.at[indices].set(mainDiagonal)
@@ -34,9 +35,9 @@ def computeConstantRight(x, r, interactionConstant, baseDensity, potential):
 
 
 @jax.jit
-def computeVariableRight(interactionConstant, baseDensity, psi):
+def computeVariableRight(dx, interactionConstant, baseDensity, psi):
     result = jnp.zeros((len(psi), len(psi)), dtype=jnp.complex64)
-    mainDiagonal = jnp.abs(psi) ** 2 * interactionConstant / jnp.abs(interactionConstant) / baseDensity
+    mainDiagonal = dx**2 * jnp.abs(psi) ** 2 * interactionConstant / jnp.abs(interactionConstant) / baseDensity
     indices = jnp.diag_indices(len(psi))
     result = result.at[indices].set(mainDiagonal)
     return result
@@ -106,7 +107,7 @@ def main():
     log.info("Computing A...")
     A = computeConstantLeft(x, constants.r)
     log.info("Computing the constant part of B...")
-    Bconst = computeConstantRight(x, constants.r, constants.g, constants.ns, V)
+    Bconst = computeConstantRight(x, constants.dx, constants.r, constants.g, constants.ns, V)
 
     log.info("Running the simulation...")
 
@@ -116,7 +117,7 @@ def main():
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
 
     for t in tqdm(range(constants.tCount - 1)):
-        Bvar = computeVariableRight(constants.g, constants.ns, psi[t])
+        Bvar = computeVariableRight(constants.dx, constants.g, constants.ns, psi[t])
         right = (Bconst + Bvar) @ psi[t]
         psi = psi.at[t + 1].set(jnp.linalg.solve(A, right))
 
