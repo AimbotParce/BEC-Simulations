@@ -37,7 +37,7 @@ imag.set_data(x, jnp.imag(psi))
 plt.show()
 
 while True:
-    nxt = nextPsi(psi, 0.1, 0.005)
+    nxt = nextPsi(psi, 0.01, 0.0001)
     psi = nxt
     probability.set_data(x, jnp.abs(psi) ** 2)
     real.set_data(x, jnp.real(psi))
