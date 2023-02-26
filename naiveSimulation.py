@@ -58,5 +58,7 @@ animation = FuncAnimation(
     init_func=init,
     blit=True,
 )
+# Save animation
+animation.save("animation.gif", writer="imagemagick", fps=30)
 
 plt.show()
