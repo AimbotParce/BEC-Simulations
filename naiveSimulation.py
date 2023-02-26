@@ -2,7 +2,7 @@ import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
 
-j = jnp.complex(0, 1)
+j = jax.lax.complex(0, 1)
 # @jax.jit
 # def hamiltonian(psi, dx):
 #     return 1j * jnp.gradient(jnp.gradient(psi, dx), dx) - 1j * jnp.abs(psi) ** 2 * psi
