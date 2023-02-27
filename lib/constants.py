@@ -11,7 +11,7 @@ xMax = 10
 
 # Time interval [s]
 tMin = 0
-tMax = 3
+tMax = 10
 
 # Number of space and time steps
 xCount = int((xMax - xMin) / dx)
@@ -27,7 +27,8 @@ velocity = 0
 
 
 # Plot constants
-plotStep = 20  # Plot every plotStep time steps
+plotPause = 0.001
+plotFPS = 1 / plotPause
+plotStep = 100
 plotYMax = 2
 plotYMin = -2
-plotPause = 0.001

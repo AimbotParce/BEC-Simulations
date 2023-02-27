@@ -1,9 +1,10 @@
 import logging as log
-from functools import partial
 
 import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
+import pandas as pd
+from tabulate import tabulate
 from tqdm import tqdm
 
 import lib.constants as constants
@@ -27,12 +28,13 @@ def computeEnergy(psi, V):
 
 @jax.jit
 def V(x, t):
-    return x**2 + t
+    return x**2
 
 
+@jax.jit
 def computeVplot(x, time):
     v = V(x, time)
-    return v / jnp.max(v) * (constants.plotYMax - constants.plotYMin) - constants.plotYMin
+    return v / jnp.max(v) * (constants.plotYMax - constants.plotYMin) + constants.plotYMin
 
 
 def main():
@@ -50,7 +52,25 @@ def main():
 
     log.info("Running the simulation...")
 
+    parameterTable = pd.DataFrame(
+        {
+            "X Step": [constants.dx],
+            "X Interval": [constants.xMax - constants.xMin],
+            "X Points": [constants.xCount],
+            "T Step": [constants.dt],
+            "T Interval": [constants.tMax - constants.tMin],
+            "T Points": [constants.tCount],
+            "velocity": [constants.velocity],
+            "g": [constants.g],
+            "ns": [constants.ns],
+        }
+    )
+    log.info("Simulation parameters:\n%s", tabulate(parameterTable, headers="keys", tablefmt="psql"))
+
     psi = jnp.zeros((constants.tCount, len(x)), dtype=jnp.complex64)
+
+    log.info("Memory allocated: %.2f MB", psi.nbytes / 1024 / 1024)
+
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
 
     for t in tqdm(range(constants.tCount - 1), desc="Simulation"):
@@ -97,7 +117,7 @@ def main():
         # Update texts
         timeText.set_text("t = %.2f" % time)
         cumulativeProbabilityText.set_text("Cumulative probability = %.2f" % integrateProbability(psi[t]))
-        energyText.set_text("Energy = %.8f" % computeEnergy(psi[t], V(x, t)))
+        energyText.set_text("Energy = %.8f" % computeEnergy(psi[t], V(x, time)))
 
         # Update lines
         potential.set_ydata(computeVplot(x, time))
