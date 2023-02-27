@@ -1,4 +1,5 @@
 import logging as log
+from typing import Callable
 
 import jax.numpy as jnp
 import matplotlib.animation as animation
@@ -12,10 +13,10 @@ def animate(
     x: jnp.ndarray,
     t: jnp.ndarray,
     psi: jnp.ndarray,
-    V: function,
-    theoreticalWaveFunction: function,
-    energyFunction: function = computeEnergy,
-    integratingFunction: function = integrateProbability,
+    V: Callable,
+    theoreticalWaveFunction: Callable,
+    energyFunction: Callable = computeEnergy,
+    integratingFunction: Callable = integrateProbability,
 ):
     """
     Parameters
@@ -26,13 +27,13 @@ def animate(
         The time steps (shape: (tCount,))
     psi : jax.numpy.ndarray
         The wave function at each time step (shape: (tCount, xCount))
-    V : function
+    V : Callable
         The potential function at each time step (shape: (tCount, xCount))
-    theoreticalWaveFunction : function
+    theoreticalWaveFunction : Callable
         The wave function generator (signature: waveFunctionGenerator(x, t))
-    energyFunction : function
+    energyFunction : Callable
         The energy function (signature: energy(x, psi, V))
-    integratingFunction : function
+    integratingFunction : Callable
         The cumulative probability function (signature: cumulativeProbability(x, psi))
 
     Returns
@@ -71,8 +72,8 @@ def animate(
         time = t[iteration]
         # Update texts
         timeText.set_text("t = %.2f" % time)
-        cumulativeProbabilityText.set_text("Cumulative probability = %.2f" % integratingFunction[iteration])
-        energyText.set_text("Energy = %.8f" % energyFunction(x, time, psi[iteration], V))
+        cumulativeProbabilityText.set_text("Cumulative probability = %.2f" % integratingFunction(x, psi[iteration]))
+        energyText.set_text("Energy = %.8f" % energyFunction(x, time, psi[iteration], V(x, time)))
 
         # Update lines
         potential.set_ydata(V(x, time))

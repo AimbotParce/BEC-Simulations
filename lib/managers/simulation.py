@@ -1,4 +1,5 @@
 import logging as log
+from typing import Callable
 
 import jax.numpy as jnp
 import pandas as pd
@@ -9,7 +10,7 @@ import lib.constants as constants
 from lib.managers.crankNicolson import computeLeft, computeRight
 
 
-def simulate(x: jnp.ndarray, t: float, waveFunctionGenerator: function, V: function) -> jnp.ndarray:
+def simulate(x: jnp.ndarray, t: float, waveFunctionGenerator: Callable, V: Callable) -> jnp.ndarray:
     """
     Simulate the time evolution of the Gross-Pitaevskii equation using the Crank-Nicolson method.
 
@@ -19,9 +20,9 @@ def simulate(x: jnp.ndarray, t: float, waveFunctionGenerator: function, V: funct
         The space grid.
     t : jnp.ndarray
         The time grid.
-    waveFunctionGenerator : function
+    waveFunctionGenerator : Callable
         The function that generates the initial wave function.
-    V : function
+    V : Callable
         The potential function.
 
     """
@@ -57,11 +58,12 @@ def simulate(x: jnp.ndarray, t: float, waveFunctionGenerator: function, V: funct
 
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
 
-    for time in tqdm(t, desc="Simulation"):
-        potential = V(x, time * constants.dt + constants.tMin)
-        B = computeRight(x, psi[time], constants.dx, constants.r, constants.g, constants.ns, potential)
-        right = B @ psi[time]
-        psi = psi.at[time + 1].set(jnp.linalg.solve(A, right))
+    for iteration in tqdm(range(0, constants.tCount), desc="Simulation"):
+        time = t[iteration]
+        potential = V(x, time)
+        B = computeRight(x, psi[iteration], constants.dx, constants.r, constants.g, constants.ns, potential)
+        right = B @ psi[iteration]
+        psi = psi.at[iteration + 1].set(jnp.linalg.solve(A, right))
 
     log.info("Simulation finished.")
 

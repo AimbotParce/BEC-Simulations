@@ -1,3 +1,5 @@
+from typing import Callable
+
 import jax
 import jax.numpy as jnp
 
@@ -20,7 +22,7 @@ def integrateProbability(x, psi):
 
 
 @jax.jit
-def computeEnergy(x, t, psi, V):
+def computeEnergy(x: jnp.ndarray, t: float, psi: jnp.ndarray, V: jnp.ndarray):
     """
     Compute the energy of the system.
 
@@ -31,13 +33,12 @@ def computeEnergy(x, t, psi, V):
     t : float
         Time
     psi : jax.numpy.ndarray
-        The wave function at each time step (shape: (tCount, xCount))
-    V : function
+        The wave function at each time step (shape: (tCount,))
+    V : jax.numpy.ndarray
         The potential function at each time step (signature: V(x, t))
     """
-    potential = V(x, t)
 
     kineticEnergy = jnp.sum(jnp.abs(jnp.gradient(psi)) ** 2) * constants.dx
-    potentialEnergy = jnp.sum(jnp.abs(psi) ** 2 * potential) * constants.dx
+    potentialEnergy = jnp.sum(jnp.abs(psi) ** 2 * V) * constants.dx
     interactionEnergy = jnp.sum(jnp.abs(psi) ** 4) * constants.dx * constants.g / 2
     return kineticEnergy + potentialEnergy + interactionEnergy
