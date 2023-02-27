@@ -1,4 +1,5 @@
 import logging as log
+from functools import partial
 
 import jax
 import jax.numpy as jnp
@@ -6,57 +7,9 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 import lib.constants as constants
+from lib.crankNicolson import computeLeft, computeRight
 from lib.managers.logging import setupLog
-
-
-@jax.jit
-def computeConstantRight(x, dx, r, interactionConstant, baseDensity, potential):
-    result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
-    mainDiagonal = (
-        jnp.ones(len(x), dtype=jnp.complex64) * (1j / r + 1)
-        + dx**2 * potential / jnp.abs(interactionConstant) / baseDensity
-    )
-    indices = jnp.diag_indices(len(x))
-    result = result.at[indices].set(mainDiagonal)
-
-    others = -1 * jnp.ones(len(x) - 1) / 2
-    indices = jnp.diag_indices(len(x) - 1)
-    indices = (indices[0] + 1, indices[1])
-    result = result.at[indices].set(others)
-
-    indices = jnp.diag_indices(len(x) - 1)
-    indices = (indices[0], indices[1] + 1)
-    result = result.at[indices].set(others)
-
-    return result
-
-
-@jax.jit
-def computeVariableRight(dx, interactionConstant, baseDensity, psi):
-    result = jnp.zeros((len(psi), len(psi)), dtype=jnp.complex64)
-    mainDiagonal = dx**2 * jnp.abs(psi) ** 2 * interactionConstant / jnp.abs(interactionConstant) / baseDensity
-    indices = jnp.diag_indices(len(psi))
-    result = result.at[indices].set(mainDiagonal)
-    return result
-
-
-@jax.jit
-def computeConstantLeft(x, r):
-    result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
-    mainDiagonal = jnp.ones(len(x), dtype=jnp.complex64) * (1j / r - 1)
-    indices = jnp.diag_indices(len(x))
-    result = result.at[indices].set(mainDiagonal)
-
-    others = jnp.ones(len(x) - 1) / 2
-    indices = jnp.diag_indices(len(x) - 1)
-    indices = (indices[0] + 1, indices[1])
-    result = result.at[indices].set(others)
-
-    indices = jnp.diag_indices(len(x) - 1)
-    indices = (indices[0], indices[1] + 1)
-    result = result.at[indices].set(others)
-
-    return result
+from lib.waveFunctions import *
 
 
 @jax.jit
@@ -72,56 +25,38 @@ def computeEnergy(psi, V):
     return kineticEnergy + potentialEnergy + interactionEnergy
 
 
-def brightSolitonMalo(x, time=0):
-    timeIndependent = (
-        jnp.sqrt(constants.ns) / jnp.cosh(x / jnp.sqrt(2)) * jnp.exp(1j * x * constants.velocity / jnp.sqrt(2))
-    )
-    timeDependency = jnp.exp(1j * time)
-
-    return timeIndependent * timeDependency
+@jax.jit
+def V(x, t):
+    return x**2 + t
 
 
-def brightSolitonWiki(x, time=0):
-    timeIndependent = 1 / jnp.cosh(x)
-    timeDependency = jnp.exp(-1j * constants.mu * time)
-    return timeIndependent * timeDependency
-
-
-def darkSolitonWiki(x, time=0):
-    timeIndependent = jnp.tanh(x)
-    timeDependency = 1
-    return timeIndependent * timeDependency
-
-
-def randomGaussian(x, time=0):
-    return jnp.exp(-((x) ** 2) / 4 - 1j * x) / (2 * jnp.pi) ** (1 / 4)
+def computeVplot(x, time):
+    v = V(x, time)
+    return v / jnp.max(v) * (constants.plotYMax - constants.plotYMin) - constants.plotYMin
 
 
 def main():
     setupLog()
 
     x = jnp.arange(constants.xMin, constants.xMax, constants.dx)
-    V = jnp.zeros_like(x)
+    waveFunctionGenerator = brightSolitonMalo
 
     log.info("Crank-Nicolson method for the time evolution of the Gross-Pitaevskii equation")
     log.info("The Crank-Nicolson method solves the equation Ax(t+dt) = Bx(t)")
-    log.info("A is a constant matrix, B has a constant part and a variable part")
+    log.info("A is constant, B must be computed at each time step")
 
     log.info("Computing A...")
-    A = computeConstantLeft(x, constants.r)
-    log.info("Computing the constant part of B...")
-    Bconst = computeConstantRight(x, constants.dx, constants.r, constants.g, constants.ns, V)
+    A = computeLeft(x, constants.r)
 
     log.info("Running the simulation...")
-
-    waveFunctionGenerator = darkSolitonWiki
 
     psi = jnp.zeros((constants.tCount, len(x)), dtype=jnp.complex64)
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
 
     for t in tqdm(range(constants.tCount - 1), desc="Simulation"):
-        Bvar = computeVariableRight(constants.dx, constants.g, constants.ns, psi[t])
-        right = (Bconst + Bvar) @ psi[t]
+        potential = V(x, t * constants.dt + constants.tMin)
+        B = computeRight(x, psi[t], constants.dx, constants.r, constants.g, constants.ns, potential)
+        right = B @ psi[t]
         psi = psi.at[t + 1].set(jnp.linalg.solve(A, right))
 
     log.info("Simulation finished. Plotting the results...")
@@ -135,9 +70,7 @@ def main():
     ax.set_title("Simulation of the Gross-Pitaevskii equation")
 
     # Lines
-    (potential,) = ax.plot(
-        x, V / jnp.max(V) * (constants.plotYMax - constants.plotYMin) - constants.plotYMin, color="red"
-    )
+    (potential,) = ax.plot(x, computeVplot(x, 0), color="red")
     (probability,) = ax.plot(x, jnp.abs(psi[0]) ** 2)
     (realPart,) = ax.plot(x, jnp.real(psi[0]))
     (imaginaryPart,) = ax.plot(x, jnp.imag(psi[0]))
@@ -164,9 +97,10 @@ def main():
         # Update texts
         timeText.set_text("t = %.2f" % time)
         cumulativeProbabilityText.set_text("Cumulative probability = %.2f" % integrateProbability(psi[t]))
-        energyText.set_text("Energy = %.8f" % computeEnergy(psi[t], V))
+        energyText.set_text("Energy = %.8f" % computeEnergy(psi[t], V(x, t)))
 
         # Update lines
+        potential.set_ydata(computeVplot(x, time))
         probability.set_ydata(jnp.abs(psi[t]) ** 2)
         realPart.set_ydata(jnp.real(psi[t]))
         imaginaryPart.set_ydata(jnp.imag(psi[t]))

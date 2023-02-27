@@ -23,7 +23,7 @@ ns = 1
 mu = g * ns
 hbar = 1
 m = 1
-velocity = 1
+velocity = 0
 
 
 # Plot constants
