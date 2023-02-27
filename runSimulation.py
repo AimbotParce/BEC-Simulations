@@ -2,6 +2,7 @@ import logging as log
 
 import jax
 import jax.numpy as jnp
+import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import pandas as pd
 from tabulate import tabulate
@@ -81,7 +82,7 @@ def main():
 
     log.info("Simulation finished. Plotting the results...")
 
-    # Interactive figure
+    # Animation
     fig, ax = plt.subplots()
     ax.set_ylim(constants.plotYMin, constants.plotYMax)
     ax.set_xlim(constants.xMin, constants.xMax)
@@ -108,10 +109,7 @@ def main():
     cumulativeProbabilityText = ax.text(0.02, 0.90, "", transform=ax.transAxes)
     energyText = ax.text(0.02, 0.85, "", transform=ax.transAxes)
 
-    plt.ion()
-    plt.show()
-
-    for t in tqdm(range(0, constants.tCount, constants.plotStep), desc="Plotting"):
+    def animate(t):
         time = t * constants.dt + constants.tMin
 
         # Update texts
@@ -126,10 +124,10 @@ def main():
         imaginaryPart.set_ydata(jnp.imag(psi[t]))
         theoretical.set_ydata(jnp.abs(waveFunctionGenerator(x, time)) ** 2)
 
-        # Update plot
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-        plt.pause(constants.plotPause)
+    anim = animation.FuncAnimation(
+        fig, animate, frames=range(0, constants.tCount, constants.plotStep), interval=1, repeat=True
+    )
+    plt.show()
 
 
 if __name__ == "__main__":
