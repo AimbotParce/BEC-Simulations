@@ -6,19 +6,19 @@ dt = 0.005
 r = dt / (dx**2)
 
 # Space interval [m]
-xMin = -10
-xMax = 10
+xMin = -15
+xMax = 15
 
 # Time interval [s]
 tMin = 0
-tMax = 10
+tMax = 20
 
 # Number of space and time steps
 xCount = int((xMax - xMin) / dx)
 tCount = int((tMax - tMin) / dt)
 
 # Constants
-g = -100
+g = -1000
 ns = 1
 mu = g * ns
 hbar = 1
