@@ -1,4 +1,5 @@
 import logging as log
+from argparse import Namespace
 from typing import Callable
 
 import jax.numpy as jnp
@@ -15,6 +16,7 @@ def animate(
     psi: jnp.ndarray,
     V: Callable,
     theoreticalWaveFunction: Callable,
+    arguments: Namespace,
     energyFunction: Callable = computeEnergy,
     integratingFunction: Callable = integrateProbability,
 ):
@@ -31,6 +33,8 @@ def animate(
         The potential function at each time step (shape: (tCount, xCount))
     theoreticalWaveFunction : Callable
         The wave function generator (signature: waveFunctionGenerator(x, t))
+    arguments : Namespace
+        The arguments passed to the program
     energyFunction : Callable
         The energy function (signature: energy(x, psi, V))
     integratingFunction : Callable
@@ -54,14 +58,17 @@ def animate(
     (probability,) = ax.plot(x, jnp.abs(psi[0]) ** 2)
     (realPart,) = ax.plot(x, jnp.real(psi[0]))
     (imaginaryPart,) = ax.plot(x, jnp.imag(psi[0]))
-    (theoretical,) = ax.plot(x, jnp.abs(theoreticalWaveFunction(x, 0)) ** 2, color="black")
+
+    plotLines = [potential, probability, realPart, imaginaryPart]
+    legendKeys = ["V(x)", "Probability", "Real part", "Imaginary part"]
+
+    if arguments.showTheoretical:
+        (theoretical,) = ax.plot(x, jnp.abs(theoreticalWaveFunction(x, 0)) ** 2, color="black")
+        plotLines.append(theoretical)
+        legendKeys.append("Theoretical")
 
     # Legends
-    ax.legend(
-        (potential, probability, realPart, imaginaryPart, theoretical),
-        ("V(x)", "Probability", "Real part", "Imaginary part", "Theoretical"),
-        loc="lower right",
-    )
+    ax.legend(plotLines, legendKeys, loc="lower right")
 
     # Texts
     timeText = ax.text(0.02, 0.95, "", transform=ax.transAxes)
@@ -80,7 +87,8 @@ def animate(
         probability.set_ydata(jnp.abs(psi[iteration]) ** 2)
         realPart.set_ydata(jnp.real(psi[iteration]))
         imaginaryPart.set_ydata(jnp.imag(psi[iteration]))
-        theoretical.set_ydata(jnp.abs(theoreticalWaveFunction(x, time)) ** 2)
+        if arguments.showTheoretical:
+            theoretical.set_ydata(jnp.abs(theoreticalWaveFunction(x, time)) ** 2)
 
     log.info("Loading animation...")
 

@@ -1,4 +1,5 @@
 import logging as log
+from argparse import Namespace
 from typing import Callable
 
 import jax.numpy as jnp
@@ -10,7 +11,9 @@ import lib.constants as constants
 from lib.managers.crankNicolson import computeLeft, computeRight
 
 
-def simulate(x: jnp.ndarray, t: float, waveFunctionGenerator: Callable, V: Callable) -> jnp.ndarray:
+def simulate(
+    x: jnp.ndarray, t: float, waveFunctionGenerator: Callable, V: Callable, arguments: Namespace
+) -> jnp.ndarray:
     """
     Simulate the time evolution of the Gross-Pitaevskii equation using the Crank-Nicolson method.
 
@@ -24,6 +27,8 @@ def simulate(x: jnp.ndarray, t: float, waveFunctionGenerator: Callable, V: Calla
         The function that generates the initial wave function.
     V : Callable
         The potential function.
+    arguments : Namespace
+        The arguments passed to the program.
 
     """
 

@@ -20,4 +20,12 @@ def setupParser():
         type=str,
         required=True,
     )
+
+    parser.add_argument(
+        "-t",
+        "--show-theoretical",
+        help="Show the theoretical wave function",
+        action="store_true",
+        dest="showTheoretical",
+    )
     return parser.parse_args()

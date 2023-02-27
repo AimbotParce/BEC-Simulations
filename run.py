@@ -65,8 +65,8 @@ def main():
     waveFunctionGenerator = jax.jit(waveFunctionGenerator)
     V = jax.jit(V)
 
-    psi = simulate(x, t, waveFunctionGenerator, V)
-    animate(x, t, psi, V, waveFunctionGenerator)
+    psi = simulate(x, t, waveFunctionGenerator, V, args)
+    animate(x, t, psi, V, waveFunctionGenerator, args)
 
 
 if __name__ == "__main__":
