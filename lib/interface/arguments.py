@@ -3,8 +3,8 @@ import argparse
 
 def setupParser():
     parser = argparse.ArgumentParser(
-        description="A LaTeX-like markup language for creating documents",
-        epilog="This is a work in progress project",
+        description="Run the Crank-Nicolson simulation for the Gross-Pitaevskii equation",
+        epilog="This is for a physics' final degree project at the University of Barcelona",
     )
     parser.add_argument(
         "-v",
@@ -16,15 +16,8 @@ def setupParser():
     parser.add_argument(
         "-i",
         "--input",
-        help="Input file",
+        help="Python file with the wave function and potential functions",
         type=str,
-        default=None,
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        help="Output file",
-        type=str,
-        default=None,
+        required=True,
     )
     return parser
