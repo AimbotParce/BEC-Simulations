@@ -2,7 +2,7 @@ import jax.numpy as np
 
 # Space and time steps [m] and [s]
 dx = 0.1
-dt = 0.001
+dt = 0.005
 r = dt / (dx**2)
 
 # Space interval [m]
@@ -29,6 +29,6 @@ velocity = 0
 # Plot constants
 plotPause = 0.001
 plotFPS = 1 / plotPause
-plotStep = 100
+plotStep = 10
 plotYMax = 2
 plotYMin = -2
