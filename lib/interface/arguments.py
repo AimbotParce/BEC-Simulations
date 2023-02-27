@@ -20,4 +20,4 @@ def setupParser():
         type=str,
         required=True,
     )
-    return parser
+    return parser.parse_args()

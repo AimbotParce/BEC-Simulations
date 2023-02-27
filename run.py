@@ -14,16 +14,7 @@ from lib.managers.simulation import simulate
 from lib.waveFunctions import *
 
 
-def main():
-    args = setupParser()
-    setupLog(level=args.verbose)
-
-    # Setup the X and T arrays
-    x = jnp.arange(constants.xMin, constants.xMax, constants.dx)
-    t = jnp.arange(constants.tMin, constants.tMax, constants.dt)
-
-    # Load the wave function and potential function
-    path = os.path.abspath(args.input)
+def loadWaveFunctionAndPotential(path):
     if not os.path.exists(path):
         raise FileNotFoundError(f"File {path} not found")
 
@@ -39,8 +30,11 @@ def main():
         raise AttributeError(f"waveFunction must be a function")
     waveFunctionGenerator = module.waveFunction
     # Check if function has the right signature
-    if not inspect.signature(waveFunctionGenerator).parameters.keys == ["x", "t"]:
-        raise AttributeError(f"waveFunction must have the signature waveFunction(x, t)")
+    signature = list(inspect.signature(waveFunctionGenerator).parameters.keys())
+    if not signature == ["x", "t"]:
+        raise AttributeError(
+            f"waveFunction must have the signature waveFunction(x, t), but has waveFunction({', '.join(signature)})"
+        )
 
     if not hasattr(module, "V"):
         raise AttributeError(f"File {path} must have a potential function (V)")
@@ -48,8 +42,24 @@ def main():
         raise AttributeError(f"V must be a function")
     V = module.V
     # Check if function has the right signature
-    if not inspect.signature(V).parameters.keys == ["x", "t"]:
-        raise AttributeError(f"V must have the signature V(x, t)")
+    signature = list(inspect.signature(V).parameters.keys())
+    if not signature == ["x", "t"]:
+        raise AttributeError(f"V must have the signature V(x, t), but has V({', '.join(signature)})")
+
+    return waveFunctionGenerator, V
+
+
+def main():
+    args = setupParser()
+    setupLog(level=args.verbose)
+
+    # Setup the X and T arrays
+    x = jnp.arange(constants.xMin, constants.xMax, constants.dx)
+    t = jnp.arange(constants.tMin, constants.tMax, constants.dt)
+
+    # Load the wave function and potential function
+    path = os.path.abspath(args.input)
+    waveFunctionGenerator, V = loadWaveFunctionAndPotential(path)
 
     log.info("Compiling functions")
     waveFunctionGenerator = jax.jit(waveFunctionGenerator)
@@ -57,3 +67,7 @@ def main():
 
     psi = simulate(x, t, waveFunctionGenerator, V)
     animate(x, t, psi, V, waveFunctionGenerator)
+
+
+if __name__ == "__main__":
+    main()
