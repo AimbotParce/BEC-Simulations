@@ -10,12 +10,6 @@ from lib.managers.simulation import simulate
 from lib.waveFunctions import *
 
 
-@jax.jit
-def V(x, t):
-    return jnp.zeros_like(x)
-    return x**2
-
-
 def main():
     setupLog()
 
@@ -25,7 +19,3 @@ def main():
 
     psi = simulate(x, t, waveFunctionGenerator, V)
     animate(x, t, psi, V, waveFunctionGenerator)
-
-
-if __name__ == "__main__":
-    main()

@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib.animation import FuncAnimation
 
 from lib import constants
-from lib.managers.logging import setupLog
+from lib.interface.logging import setupLog
 
 # j = jax.lax.complex(0.0, 1.0)
 # @jax.jit
