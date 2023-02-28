@@ -28,4 +28,14 @@ def setupParser():
         action="store_true",
         dest="showTheoretical",
     )
+
+    parser.add_argument(
+        "-oc",
+        "--override-constants",
+        help="Override the constants with the provided values (provided as a list of key=value pairs)",
+        type=str,
+        nargs="+",
+        dest="overrideConstants",
+    )
+
     return parser.parse_args()

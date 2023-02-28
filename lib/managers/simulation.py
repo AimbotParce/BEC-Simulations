@@ -3,8 +3,6 @@ from argparse import Namespace
 from typing import Callable
 
 import jax.numpy as jnp
-import pandas as pd
-from tabulate import tabulate
 from tqdm import tqdm
 
 import lib.constants as constants
@@ -40,22 +38,6 @@ def simulate(
     A = computeLeft(x, constants.r)
 
     log.info("Running the simulation...")
-
-    parameterTable = pd.DataFrame(
-        {
-            "X Step": [constants.dx],
-            "X Interval": [constants.xMax - constants.xMin],
-            "X Points": [constants.xCount],
-            "T Step": [constants.dt],
-            "T Interval": [constants.tMax - constants.tMin],
-            "T Points": [constants.tCount],
-            "velocity": [constants.velocity],
-            "g": [constants.g],
-            "ns": [constants.baseDensity],
-        }
-    )
-
-    log.info("Simulation parameters:\n%s", tabulate(parameterTable, headers="keys", tablefmt="psql"))
 
     psi = jnp.zeros((len(t), len(x)), dtype=jnp.complex64)
 

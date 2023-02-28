@@ -52,6 +52,7 @@ def loadWaveFunctionAndPotential(path):
 def main():
     args = setupParser()
     setupLog(level=args.verbose)
+    constants.overrideConstants(args)
 
     # Setup the X and T arrays
     x = jnp.arange(constants.xMin, constants.xMax, constants.dx)
@@ -64,7 +65,11 @@ def main():
     log.info("Compiling functions")
     waveFunctionGenerator = jax.jit(waveFunctionGenerator)
     V = jax.jit(V)
+    log.info("Done")
 
+    constants.printConstants()
+    constants.printSimulationParams()
+    constants.printAnimationParams()
     psi = simulate(x, t, waveFunctionGenerator, V, args)
     animate(x, t, psi, V, waveFunctionGenerator, args)
 

@@ -14,4 +14,4 @@ def waveFunction(x, t):
 
 
 def V(x, t):
-    return x**2
+    return x**2 / constants.healingLength**2
