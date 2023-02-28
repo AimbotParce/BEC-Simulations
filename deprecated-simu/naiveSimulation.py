@@ -19,7 +19,7 @@ from lib.interface.logging import setupLog
 
 @jax.jit
 def hamiltonian(psi, dx):
-    return -constants.hbar**2 / (2 * constants.m) * jnp.gradient(jnp.gradient(psi, dx), dx)
+    return -constants.hbar**2 / (2 * constants.mass) * jnp.gradient(jnp.gradient(psi, dx), dx)
 
 
 # @jax.jit

@@ -1,4 +1,4 @@
-import jax.numpy as np
+import jax.numpy as jnp
 
 # Space and time steps [m] and [s]
 dx = 0.1
@@ -20,10 +20,11 @@ tCount = int((tMax - tMin) / dt)
 # Constants
 g = -1000
 ns = 1
-mu = g * ns
+chemicalPotential = g * ns
 hbar = 1
-m = 1
+mass = 1
 velocity = 0
+healingLength = hbar / jnp.sqrt(2 * mass * chemicalPotential)
 
 
 # Plot constants

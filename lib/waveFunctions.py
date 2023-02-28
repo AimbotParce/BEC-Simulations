@@ -17,7 +17,7 @@ def brightSolitonMalo(x, t=0):
 
 def brightSolitonWiki(x, t=0):
     timeIndependent = 1 / jnp.cosh(x)
-    timeDependency = jnp.exp(-1j * constants.mu * t)
+    timeDependency = jnp.exp(-1j * constants.chemicalPotential * t)
     return timeIndependent * timeDependency
 
 
