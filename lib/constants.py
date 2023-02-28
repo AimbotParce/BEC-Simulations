@@ -19,8 +19,8 @@ tCount = int((tMax - tMin) / dt)
 
 # Constants
 g = -1000
-ns = 1
-chemicalPotential = g * ns
+baseDensity = 1
+chemicalPotential = g * baseDensity
 hbar = 1
 mass = 1
 velocity = 0

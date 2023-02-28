@@ -5,7 +5,9 @@ import lib.constants as constants
 
 def waveFunction(x, t):
     timeIndependent = (
-        jnp.sqrt(constants.ns) / jnp.cosh(x - 1 / jnp.sqrt(2)) * jnp.exp(1j * x - 1 * constants.velocity / jnp.sqrt(2))
+        jnp.sqrt(constants.baseDensity)
+        / jnp.cosh(x - 1 / jnp.sqrt(2))
+        * jnp.exp(1j * x - 1 * constants.velocity / jnp.sqrt(2))
     )
 
     return timeIndependent

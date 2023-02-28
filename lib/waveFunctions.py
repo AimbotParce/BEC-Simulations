@@ -8,7 +8,7 @@ import lib.constants as constants
 
 def brightSolitonMalo(x, t=0):
     timeIndependent = (
-        jnp.sqrt(constants.ns) / jnp.cosh(x / jnp.sqrt(2)) * jnp.exp(1j * x * constants.velocity / jnp.sqrt(2))
+        jnp.sqrt(constants.baseDensity) / jnp.cosh(x / jnp.sqrt(2)) * jnp.exp(1j * x * constants.velocity / jnp.sqrt(2))
     )
     timeDependency = jnp.exp(1j * t)
 

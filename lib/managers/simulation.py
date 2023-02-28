@@ -51,7 +51,7 @@ def simulate(
             "T Points": [constants.tCount],
             "velocity": [constants.velocity],
             "g": [constants.g],
-            "ns": [constants.ns],
+            "ns": [constants.baseDensity],
         }
     )
 
@@ -66,7 +66,7 @@ def simulate(
     for iteration in tqdm(range(0, constants.tCount), desc="Simulation"):
         time = t[iteration]
         potential = V(x, time)
-        B = computeRight(x, psi[iteration], constants.dx, constants.r, constants.g, constants.ns, potential)
+        B = computeRight(x, psi[iteration], constants.dx, constants.r, constants.g, constants.baseDensity, potential)
         right = B @ psi[iteration]
         psi = psi.at[iteration + 1].set(jnp.linalg.solve(A, right))
 
