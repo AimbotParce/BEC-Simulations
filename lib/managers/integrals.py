@@ -1,5 +1,3 @@
-from typing import Callable
-
 import jax
 import jax.numpy as jnp
 
@@ -7,7 +5,7 @@ import lib.constants as constants
 
 
 @jax.jit
-def integrateProbability(x, psi):
+def integrateProbability(x: jnp.ndarray, psi: jnp.ndarray):
     """
     Compute the probability of finding the particle in the system.
 
@@ -38,7 +36,8 @@ def computeEnergy(x: jnp.ndarray, t: float, psi: jnp.ndarray, V: jnp.ndarray):
         The potential function at each time step (signature: V(x, t))
     """
 
-    kineticEnergy = jnp.sum(jnp.abs(jnp.gradient(psi)) ** 2) * constants.dx
-    potentialEnergy = jnp.sum(jnp.abs(psi) ** 2 * V) * constants.dx
-    interactionEnergy = jnp.sum(jnp.abs(psi) ** 4) * constants.dx * constants.g / 2
-    return kineticEnergy + potentialEnergy + interactionEnergy
+    kineticEnergy = -jnp.abs(jnp.conjugate(psi) * jnp.gradient(jnp.gradient(psi)))
+    potentialEnergy = V / constants.baseDensity / jnp.abs(constants.g)
+    interactionEnergy = constants.g / jnp.abs(constants.g) / constants.baseDensity * jnp.abs(psi) ** 2
+
+    return jnp.sum(kineticEnergy + potentialEnergy + interactionEnergy) * constants.dx

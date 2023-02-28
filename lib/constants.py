@@ -16,13 +16,13 @@ healingLength = hbar / jnp.sqrt(2 * mass * chemicalPotential)
 
 
 # Space and time steps [m] and [s]
-dx = 0.1
+dx = 0.2
 dt = 0.005
 r = dt / (dx**2)
 
 # Space interval [m]
 xMin = -25
-xMax = 25
+xMax = 50
 
 # Time interval [s]
 tMin = 0

@@ -52,6 +52,16 @@ def simulate(
         right = B @ psi[iteration]
         psi = psi.at[iteration + 1].set(jnp.linalg.solve(A, right))
 
+        if not arguments.ignoreNan:
+            if iteration % 100 == 0:
+                # Test if a NaN has been generated
+                if jnp.isnan(psi[iteration - 101 : iteration + 1]).any():
+                    log.error(
+                        "NaN encountered at iteration %d. If you wish to ignore this, add -inan/--ignore-nan to execution command.",
+                        iteration,
+                    )
+                    raise ValueError("NaN encountered")
+
     log.info("Simulation finished.")
 
     return psi
