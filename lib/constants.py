@@ -22,11 +22,11 @@ r = dt / (dx**2)
 
 # Space interval [m]
 xMin = -25
-xMax = 50
+xMax = 25
 
 # Time interval [s]
 tMin = 0
-tMax = 20
+tMax = 10
 
 # Number of space and time steps
 xCount = int((xMax - xMin) / dx)

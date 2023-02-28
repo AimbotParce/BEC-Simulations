@@ -14,4 +14,4 @@ def waveFunction(x, t):
 
 
 def V(x, t):
-    return jnp.inf * (jnp.abs(x) >= 4)
+    return 999 * (jnp.abs(x) >= 15)
