@@ -2,16 +2,13 @@ import jax.numpy as jnp
 
 import lib.constants as constants
 
+B = (constants.g / jnp.abs(constants.g) / 2 / constants.baseDensity) ** 1 / 3
+
 
 def waveFunction(x, t):
-    timeIndependent = (
-        jnp.sqrt(constants.baseDensity)
-        / jnp.cosh(x - 1 / jnp.sqrt(2))
-        * jnp.exp(1j * x - 1 * constants.velocity / jnp.sqrt(2))
-    )
-
+    timeIndependent = (jnp.tanh(B * x) + 1) / 10
     return timeIndependent
 
 
 def V(x, t):
-    return x**2 / constants.healingLength**2
+    return x**2 / constants.chemicalPotential
