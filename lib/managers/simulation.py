@@ -12,7 +12,7 @@ from lib.managers.crankNicolson import computeLeft, computeRight
 
 
 def simulate(
-    x: jnp.ndarray, t: float, waveFunctionGenerator: Callable, V: Callable, arguments: Namespace
+    x: jnp.ndarray, t: jnp.ndarray, waveFunctionGenerator: Callable, V: Callable, arguments: Namespace
 ) -> jnp.ndarray:
     """
     Simulate the time evolution of the Gross-Pitaevskii equation using the Crank-Nicolson method.
@@ -57,9 +57,9 @@ def simulate(
 
     log.info("Simulation parameters:\n%s", tabulate(parameterTable, headers="keys", tablefmt="psql"))
 
-    psi = jnp.zeros((constants.tCount, len(x)), dtype=jnp.complex64)
+    psi = jnp.zeros((len(t), len(x)), dtype=jnp.complex64)
 
-    log.info("Memory allocated: %.2f MB", psi.nbytes / 1024 / 1024)
+    log.info("Memory allocated: %.2f MB", (psi.nbytes + x.nbytes + t.nbytes) / 1024 / 1024)
 
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
 
