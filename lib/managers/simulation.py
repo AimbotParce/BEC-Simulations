@@ -35,7 +35,7 @@ def simulate(
     log.info("A is constant, B must be computed at each time step")
 
     log.info("Computing A...")
-    A = computeLeft(x, constants.r)
+    A = computeLeft(x, psi, V(0, 0), constants.dx, constants.dt, constants.mass, constants.hbar, constants.g)
 
     log.info("Running the simulation...")
 
@@ -48,7 +48,9 @@ def simulate(
     for iteration in tqdm(range(0, constants.tCount), desc="Simulation"):
         time = t[iteration]
         potential = V(x, time)
-        B = computeRight(x, psi[iteration], constants.dx, constants.r, constants.g, constants.baseDensity, potential)
+        B = computeRight(
+            x, psi[iteration], potential, constants.dx, constants.dt, constants.mass, constants.hbar, constants.g
+        )
         right = B @ psi[iteration]
         psi = psi.at[iteration + 1].set(jnp.linalg.solve(A, right))
 
