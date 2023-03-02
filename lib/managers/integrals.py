@@ -40,6 +40,6 @@ def computeEnergy(x: jnp.ndarray, t: float, psi: jnp.ndarray, V: jnp.ndarray):
         -constants.hbar**2 / 2 / constants.mass * jnp.gradient(jnp.gradient(psi, constants.dx), constants.dx)
     )
     potentialEnergy = V * psi
-    interactionEnergy = constants.interactionConstant * jnp.abs(psi) ** 2 * psi
+    interactionEnergy = constants.g * jnp.abs(psi) ** 2 * psi
 
     return jnp.sum(jnp.abs(jnp.conjugate(psi) * (kineticEnergy + potentialEnergy + interactionEnergy))) * constants.dx
