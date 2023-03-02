@@ -29,6 +29,7 @@ def simulate(
         The arguments passed to the program.
 
     """
+    psi = jnp.zeros((len(t), len(x)), dtype=jnp.complex64)
 
     log.info("Crank-Nicolson method for the time evolution of the Gross-Pitaevskii equation")
     log.info("The Crank-Nicolson method solves the equation Ax(t+dt) = Bx(t)")
@@ -38,8 +39,6 @@ def simulate(
     A = computeLeft(x, psi, V(0, 0), constants.dx, constants.dt, constants.mass, constants.hbar, constants.g)
 
     log.info("Running the simulation...")
-
-    psi = jnp.zeros((len(t), len(x)), dtype=jnp.complex64)
 
     log.info("Memory allocated: %.2f MB", (psi.nbytes + x.nbytes + t.nbytes) / 1024 / 1024)
 
