@@ -36,8 +36,10 @@ def computeEnergy(x: jnp.ndarray, t: float, psi: jnp.ndarray, V: jnp.ndarray):
         The potential function at each time step (signature: V(x, t))
     """
 
-    kineticEnergy = -jnp.abs(jnp.conjugate(psi) * jnp.gradient(jnp.gradient(psi)))
-    potentialEnergy = V / constants.baseDensity / jnp.abs(constants.g)
-    interactionEnergy = constants.g / jnp.abs(constants.g) / constants.baseDensity * jnp.abs(psi) ** 2
+    kineticEnergy = (
+        -constants.hbar**2 / 2 / constants.mass * jnp.gradient(jnp.gradient(psi, constants.dx), constants.dx)
+    )
+    potentialEnergy = V(x, t) * psi
+    interactionEnergy = constants.interactionConstant * jnp.abs(psi) ** 2 * psi
 
-    return jnp.sum(kineticEnergy + potentialEnergy + interactionEnergy) * constants.dx
+    return jnp.sum(jnp.abs(jnp.conjugate(psi) * (kineticEnergy + potentialEnergy + interactionEnergy))) * constants.dx
