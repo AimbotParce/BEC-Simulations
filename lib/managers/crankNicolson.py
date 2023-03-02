@@ -3,16 +3,39 @@ import jax.numpy as jnp
 
 
 @jax.jit
-def computeConstantRight(x, dx, r, interactionConstant, baseDensity, potential):
+def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
+    """
+    Computes the right hand side of the Crank-Nicolson equation.
+
+    Parameters
+    ----------
+    x : jnp.ndarray
+        The x values of the grid.
+    psi : jnp.ndarray
+        The wave function at the current time step.
+    potential : jnp.ndarray
+        The potential at the current time step.
+    dx : float
+        The step size in x.
+    dt : float
+        The step size in t.
+    mass : float
+        The mass of the particle.
+    hbar : float
+        The reduced Planck constant.
+    interactionConstant : float
+        The interaction constant. (g)
+    """
+    I = jnp.eye(len(x), dtype=jnp.complex64)
     result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
     mainDiagonal = (
-        jnp.ones(len(x), dtype=jnp.complex64) * (1j / r + 1)
-        + dx**2 * potential / jnp.abs(interactionConstant) / baseDensity
+        -4 * mass * dx**2 / (hbar**2) * (1j * hbar / dt * I + potential + interactionConstant * jnp.abs(psi) ** 2)
+        - 2 * I
     )
     indices = jnp.diag_indices(len(x))
     result = result.at[indices].set(mainDiagonal)
 
-    others = -1 * jnp.ones(len(x) - 1) / 2
+    others = 1
     indices = jnp.diag_indices(len(x) - 1)
     indices = (indices[0] + 1, indices[1])
     result = result.at[indices].set(others)
@@ -25,45 +48,36 @@ def computeConstantRight(x, dx, r, interactionConstant, baseDensity, potential):
 
 
 @jax.jit
-def computeVariableRight(dx, interactionConstant, baseDensity, psi):
-    result = jnp.zeros((len(psi), len(psi)), dtype=jnp.complex64)
-    mainDiagonal = dx**2 * jnp.abs(psi) ** 2 * interactionConstant / jnp.abs(interactionConstant) / baseDensity
-    indices = jnp.diag_indices(len(psi))
-    result = result.at[indices].set(mainDiagonal)
-    return result
+def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
+    """
+    Computes the left hand side of the Crank-Nicolson equation.
 
-
-@jax.jit
-def computeRight(x, psi, dx, r, interactionConstant, baseDensity, potential):
+    Parameters
+    ----------
+    x : jnp.ndarray
+        The x values of the grid.
+    psi : jnp.ndarray
+        The wave function at the current time step.
+    potential : jnp.ndarray
+        The potential at the current time step.
+    dx : float
+        The step size in x.
+    dt : float
+        The step size in t.
+    mass : float
+        The mass of the particle.
+    hbar : float
+        The reduced Planck constant.
+    interactionConstant : float
+        The interaction constant. (g)
+    """
+    I = jnp.eye(len(x), dtype=jnp.complex64)
     result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
-    mainDiagonal = (
-        jnp.ones(len(x), dtype=jnp.complex64) * (1j / r + 1)
-        + dx**2 * potential / jnp.abs(interactionConstant) / baseDensity
-        + dx**2 * jnp.abs(psi) ** 2 * interactionConstant / jnp.abs(interactionConstant) / baseDensity
-    )
+    mainDiagonal = 4j * mass * dx**2 / hbar / dt - 2
     indices = jnp.diag_indices(len(x))
     result = result.at[indices].set(mainDiagonal)
 
-    others = -1 * jnp.ones(len(x) - 1) / 2
-    indices = jnp.diag_indices(len(x) - 1)
-    indices = (indices[0] + 1, indices[1])
-    result = result.at[indices].set(others)
-
-    indices = jnp.diag_indices(len(x) - 1)
-    indices = (indices[0], indices[1] + 1)
-    result = result.at[indices].set(others)
-
-    return result
-
-
-@jax.jit
-def computeLeft(x, r):
-    result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
-    mainDiagonal = jnp.ones(len(x), dtype=jnp.complex64) * (1j / r - 1)
-    indices = jnp.diag_indices(len(x))
-    result = result.at[indices].set(mainDiagonal)
-
-    others = jnp.ones(len(x) - 1) / 2
+    others = 1
     indices = jnp.diag_indices(len(x) - 1)
     indices = (indices[0] + 1, indices[1])
     result = result.at[indices].set(others)
