@@ -13,6 +13,8 @@ from lib.managers.animation import animate
 from lib.managers.simulation import simulate
 from lib.waveFunctions import *
 
+jax.config.config.update("jax_enable_x64", True)
+
 
 def loadWaveFunctionAndPotential(path):
     if not os.path.exists(path):

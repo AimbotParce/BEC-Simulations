@@ -4,9 +4,9 @@ import jax.numpy as jnp
 
 @jax.jit
 def computeConstantRight(x, dx, r, interactionConstant, baseDensity, potential):
-    result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
+    result = jnp.zeros((len(x), len(x)), dtype=jnp.complex128)
     mainDiagonal = (
-        jnp.ones(len(x), dtype=jnp.complex64) * (1j / r + 1)
+        jnp.ones(len(x), dtype=jnp.complex128) * (1j / r + 1)
         + dx**2 * potential / jnp.abs(interactionConstant) / baseDensity
     )
     indices = jnp.diag_indices(len(x))
@@ -26,7 +26,7 @@ def computeConstantRight(x, dx, r, interactionConstant, baseDensity, potential):
 
 @jax.jit
 def computeVariableRight(dx, interactionConstant, baseDensity, psi):
-    result = jnp.zeros((len(psi), len(psi)), dtype=jnp.complex64)
+    result = jnp.zeros((len(psi), len(psi)), dtype=jnp.complex128)
     mainDiagonal = dx**2 * jnp.abs(psi) ** 2 * interactionConstant / jnp.abs(interactionConstant) / baseDensity
     indices = jnp.diag_indices(len(psi))
     result = result.at[indices].set(mainDiagonal)
@@ -35,9 +35,9 @@ def computeVariableRight(dx, interactionConstant, baseDensity, psi):
 
 @jax.jit
 def computeRight(x, psi, dx, r, interactionConstant, baseDensity, potential):
-    result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
+    result = jnp.zeros((len(x), len(x)), dtype=jnp.complex128)
     mainDiagonal = (
-        jnp.ones(len(x), dtype=jnp.complex64) * (1j / r + 1)
+        jnp.ones(len(x), dtype=jnp.complex128) * (1j / r + 1)
         + dx**2 * potential / jnp.abs(interactionConstant) / baseDensity
         + dx**2 * jnp.abs(psi) ** 2 * interactionConstant / jnp.abs(interactionConstant) / baseDensity
     )
@@ -58,8 +58,8 @@ def computeRight(x, psi, dx, r, interactionConstant, baseDensity, potential):
 
 @jax.jit
 def computeLeft(x, r):
-    result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
-    mainDiagonal = jnp.ones(len(x), dtype=jnp.complex64) * (1j / r - 1)
+    result = jnp.zeros((len(x), len(x)), dtype=jnp.complex128)
+    mainDiagonal = jnp.ones(len(x), dtype=jnp.complex128) * (1j / r - 1)
     indices = jnp.diag_indices(len(x))
     result = result.at[indices].set(mainDiagonal)
 

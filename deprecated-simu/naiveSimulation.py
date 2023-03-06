@@ -31,7 +31,7 @@ setupLog()
 log.info("Starting simulation (%s frames)", constants.tCount)
 p = 1
 x = jnp.arange(constants.xMin, constants.xMax, constants.dx)
-psi = np.zeros((constants.tCount, *x.shape), dtype=np.complex64)
+psi = np.zeros((constants.tCount, *x.shape), dtype=np.complex128)
 log.info("x shape = %s, psi shape = %s", x.shape, psi.shape)
 psi0 = jnp.exp(-((x - 7) ** 2) / 4 - 1j * p * x) / (2 * jnp.pi) ** (1 / 4)
 psi[0] = psi0
