@@ -40,7 +40,8 @@ def simulate(
 
     log.info("Running the simulation...")
 
-    log.info("Memory allocated: %.2f MB", (psi.nbytes + x.nbytes + t.nbytes) / 1024 / 1024)
+    log.info("Memory allocated: %.2f MB", (psi.nbytes + x.nbytes + t.nbytes + A.nbytes * 2) / 1024 / 1024)
+    #                                                                           ^ Take into account B
 
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
 
