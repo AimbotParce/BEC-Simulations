@@ -103,7 +103,7 @@ import jax.numpy as jnp
 
 
 @jax.jit
-def computeRightScho(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
+def computeRightSchro(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     """
     Computes the right hand side of the Crank-Nicolson equation.
 
@@ -148,7 +148,7 @@ def computeRightScho(x, psi, potential, dx, dt, mass, hbar, interactionConstant)
 
 
 @jax.jit
-def computeLeftScho(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
+def computeLeftSchro(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     """
     Computes the left hand side of the Crank-Nicolson equation.
 
