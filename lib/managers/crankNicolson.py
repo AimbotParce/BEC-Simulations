@@ -42,6 +42,10 @@ def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     indices = (indices[0], indices[1] + 1)
     result = result.at[indices].set(others)
 
+    # Periodic boundary conditions
+    result = result.at[(0, -1)].set(others)
+    result = result.at[(-1, 0)].set(others)
+
     return result
 
 
@@ -70,9 +74,7 @@ def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
         The interaction constant. (g)
     """
     result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
-    mainDiagonal = (
-        4 * mass * dx**2 / (hbar**2) * (1j * hbar / dt - potential - interactionConstant * jnp.abs(psi) ** 2) - 2
-    )
+    mainDiagonal = 4j * mass * dx**2 / hbar / dt - 2
     indices = jnp.diag_indices(len(x))
     result = result.at[indices].set(mainDiagonal)
 
@@ -84,5 +86,9 @@ def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     indices = jnp.diag_indices(len(x) - 1)
     indices = (indices[0], indices[1] + 1)
     result = result.at[indices].set(others)
+
+    # Periodic boundary conditions
+    result = result.at[(0, -1)].set(others)
+    result = result.at[(-1, 0)].set(others)
 
     return result
