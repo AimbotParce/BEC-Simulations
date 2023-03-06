@@ -37,7 +37,7 @@ def simulate(
 
     log.info("Precomputing the potential over time...")
 
-    potential = jnp.zeros((len(t), len(x)), dtype=jnp.float32)
+    potential = jnp.zeros((len(t), len(x)), dtype=jnp.float64)
     for iteration in tqdm(range(0, len(t)), desc="Potential"):
         potential = potential.at[iteration].set(V(x, t[iteration]))
 
