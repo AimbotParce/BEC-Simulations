@@ -33,15 +33,24 @@ def simulate(
 
     log.info("Crank-Nicolson method for the time evolution of the Gross-Pitaevskii equation")
     log.info("The Crank-Nicolson method solves the equation Ax(t+dt) = Bx(t)")
-    log.info("A is constant, B must be computed at each time step")
+    log.info("A and B can be computed at each time step")
 
-    log.info("Computing A...")
-    A = computeLeft(x, psi, V(0, 0), constants.dx, constants.dt, constants.mass, constants.hbar, constants.g)
+    # log.info("Computing A...")
+    # A = computeLeft(x, psi, V(0, 0), constants.dx, constants.dt, constants.mass, constants.hbar, constants.g)
+
+    log.info("Precomputing the potential over time...")
+
+    potential = jnp.zeros((len(t), len(x)), dtype=jnp.float32)
+    for iteration in tqdm(range(0, len(t)), desc="Potential"):
+        potential = potential.at[iteration].set(V(x, t[iteration]))
 
     log.info("Running the simulation...")
 
-    log.info("Memory allocated: %.2f MB", (psi.nbytes + x.nbytes + t.nbytes + A.nbytes * 2) / 1024 / 1024)
-    #                                                                           ^ Take into account B
+    A = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)  # Preallocate A
+    log.info(
+        "Memory allocated: %.2f MB",
+        (psi.nbytes + x.nbytes + t.nbytes + A.nbytes * 2 + potential.nbytes) / 1024 / 1024,
+    )  #                                              ^ Take into account B
 
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
     # psi = psi.at[0, 0].set(0)  # Set the first element to 0 to avoid NaNs
@@ -50,9 +59,26 @@ def simulate(
 
     for iteration in tqdm(range(0, constants.tCount), desc="Simulation"):
         time = t[iteration]
-        potential = V(x, time)
+        A = computeLeft(
+            x,
+            None,  # psi
+            potential[iteration + 1],
+            constants.dx,
+            constants.dt,
+            constants.mass,
+            constants.hbar,
+            constants.g,
+        )
+
         B = computeRight(
-            x, psi[iteration], potential, constants.dx, constants.dt, constants.mass, constants.hbar, constants.g
+            x,
+            psi[iteration],
+            potential[iteration],
+            constants.dx,
+            constants.dt,
+            constants.mass,
+            constants.hbar,
+            constants.g,
         )
         right = B @ psi[iteration]
         psi = psi.at[iteration + 1].set(jnp.linalg.solve(A, right))
