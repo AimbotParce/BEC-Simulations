@@ -3,7 +3,7 @@ import jax.numpy as jnp
 
 
 @jax.jit
-def computeRightGP(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
+def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     """
     Computes the right hand side of the Crank-Nicolson equation.
 
@@ -50,7 +50,7 @@ def computeRightGP(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
 
 
 @jax.jit
-def computeLeftGP(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
+def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     """
     Computes the left hand side of the Crank-Nicolson equation.
 
@@ -97,9 +97,11 @@ def computeLeftGP(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
 import jax
 import jax.numpy as jnp
 
+# Just for testing, the Schrodinger equation:
+
 
 @jax.jit
-def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
+def computeRightScho(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     """
     Computes the right hand side of the Crank-Nicolson equation.
 
@@ -144,7 +146,7 @@ def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
 
 
 @jax.jit
-def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
+def computeLeftScho(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     """
     Computes the left hand side of the Crank-Nicolson equation.
 
