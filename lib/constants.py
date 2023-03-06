@@ -6,11 +6,11 @@ import pandas as pd
 from tabulate import tabulate
 
 # Constants
-g = -1
+g = 0
 baseDensity = 1
 chemicalPotential = jnp.abs(g) * baseDensity
-hbar = 1
-mass = 1 / 2
+hbar = 1.054571817e-34
+mass = 0.0001 / 2
 velocity = 0
 healingLength = hbar / jnp.sqrt(2 * mass * chemicalPotential)
 

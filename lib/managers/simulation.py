@@ -44,6 +44,9 @@ def simulate(
     #                                                                           ^ Take into account B
 
     psi = psi.at[0].set(waveFunctionGenerator(x, 0))
+    # psi = psi.at[0, 0].set(0)  # Set the first element to 0 to avoid NaNs
+    # psi = psi.at[0, -1].set(0)  # Set the last element to 0 to avoid NaNs
+    # This doesn't do anything.
 
     for iteration in tqdm(range(0, constants.tCount), desc="Simulation"):
         time = t[iteration]

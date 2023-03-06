@@ -26,7 +26,6 @@ def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     interactionConstant : float
         The interaction constant. (g)
     """
-    I = jnp.ones(len(x), dtype=jnp.complex64)
     result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
     mainDiagonal = (
         4 * mass * dx**2 / (hbar**2) * (1j * hbar / dt + 2 + potential + interactionConstant * jnp.abs(psi) ** 2)
@@ -71,7 +70,7 @@ def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
         The interaction constant. (g)
     """
     result = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)
-    mainDiagonal = (4j * mass * dx**2 / hbar / dt - 2) * jnp.ones(len(x), dtype=jnp.complex64)
+    mainDiagonal = 4j * mass * dx**2 / hbar / dt - 2
     indices = jnp.diag_indices(len(x))
     result = result.at[indices].set(mainDiagonal)
 
