@@ -1,6 +1,8 @@
 import jax
 import jax.numpy as jnp
 
+# Gross Pitaevskii solver
+
 
 @jax.jit
 def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
