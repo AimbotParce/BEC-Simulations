@@ -35,8 +35,8 @@ def simulate(
     log.info("The Crank-Nicolson method solves the equation Ax(t+dt) = Bx(t)")
     log.info("A and B can be computed at each time step")
 
-    # log.info("Computing A...")
-    # A = computeLeft(x, psi, V(0, 0), constants.dx, constants.dt, constants.mass, constants.hbar, constants.g)
+    log.info("Computing A...")
+    A = computeLeft(x, psi, V(0, 0), constants.dx, constants.dt, constants.mass, constants.hbar, constants.g)
 
     log.info("Precomputing the potential over time...")
 
@@ -46,7 +46,7 @@ def simulate(
 
     log.info("Running the simulation...")
 
-    A = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)  # Preallocate A
+    # A = jnp.zeros((len(x), len(x)), dtype=jnp.complex64)  # Preallocate A
     log.info(
         "Memory allocated: %.2f MB",
         (psi.nbytes + x.nbytes + t.nbytes + A.nbytes * 2 + potential.nbytes) / 1024 / 1024,
@@ -59,16 +59,16 @@ def simulate(
 
     for iteration in tqdm(range(0, constants.tCount), desc="Simulation"):
         time = t[iteration]
-        A = computeLeft(
-            x,
-            None,  # psi
-            potential[iteration + 1],
-            constants.dx,
-            constants.dt,
-            constants.mass,
-            constants.hbar,
-            constants.g,
-        )
+        # A = computeLeft(
+        #     x,
+        #     None,  # psi
+        #     potential[iteration + 1],
+        #     constants.dx,
+        #     constants.dt,
+        #     constants.mass,
+        #     constants.hbar,
+        #     constants.g,
+        # )
 
         B = computeRight(
             x,
