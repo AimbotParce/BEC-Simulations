@@ -6,4 +6,4 @@ waveFunction = brightSolitonMalo
 
 
 def V(x, t):
-    return x**2
+    return (x / 25) ** 2

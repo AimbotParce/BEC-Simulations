@@ -12,6 +12,7 @@ chemicalPotential = jnp.abs(g) * baseDensity
 hbar = 1
 mass = 1
 velocity = 0
+x0 = 0
 healingLength = hbar / jnp.sqrt(2 * mass * chemicalPotential)
 
 
@@ -49,8 +50,9 @@ def printConstants():
             "Chemical Potential\n(chemicalPotential)": [chemicalPotential],
             "hbar\n(hbar)": [hbar],
             "Mass\n(mass)": [mass],
-            "Velocity\n(velocity)": [velocity],
             "Healing Length\n(healingLength)": [healingLength],
+            "Velocity\n(velocity)": [velocity],
+            "Initial Position\n(x0)": [x0],
         }
     )
 
