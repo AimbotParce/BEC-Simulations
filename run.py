@@ -54,15 +54,18 @@ def loadWaveFunctionAndPotential(path):
 def main():
     args = setupParser()
     setupLog(level=args.verbose)
+
+    # Load the wave function and potential function
+    path = os.path.abspath(args.input)
+    waveFunctionGenerator, V = loadWaveFunctionAndPotential(path)
+
+    # Override constants (Do this after loading the wave function and potential function
+    # because they might have overridden some constants themselves)
     constants.overrideConstants(args)
 
     # Setup the X and T arrays
     x = jnp.arange(constants.xMin, constants.xMax, constants.dx)
     t = jnp.arange(constants.tMin, constants.tMax, constants.dt)
-
-    # Load the wave function and potential function
-    path = os.path.abspath(args.input)
-    waveFunctionGenerator, V = loadWaveFunctionAndPotential(path)
 
     log.info("Compiling functions")
     waveFunctionGenerator = jax.jit(waveFunctionGenerator)

@@ -2,6 +2,8 @@ import jax.numpy as jnp
 
 import lib.constants as constants
 
+constants.g = 0
+
 
 def V(x, t):
     return x**2 / 2
