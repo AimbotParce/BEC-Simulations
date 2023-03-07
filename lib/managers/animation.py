@@ -79,7 +79,7 @@ def animate(
         time = t[iteration]
         # Update texts
         timeText.set_text("t = %.2f" % time)
-        cumulativeProbabilityText.set_text("Cumulative probability = %.10f" % integratingFunction(x, psi[iteration]))
+        cumulativeProbabilityText.set_text("Norm = %.10f" % integratingFunction(x, psi[iteration]))
         energyText.set_text("Energy = %.8f" % energyFunction(x, time, psi[iteration], V(x, time)))
 
         # Update lines

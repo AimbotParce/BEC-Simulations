@@ -10,4 +10,4 @@ def V(x, t):
 
 
 def waveFunction(x, t):
-    return jnp.exp(-(x**2) / 2) / (jnp.pi) ** (1 / 4)
+    return jnp.exp(-((2 * x) ** 2) / 2) / (jnp.pi) ** (1 / 4)
