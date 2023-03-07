@@ -59,7 +59,7 @@ def simulate(
         time = t[iteration]
         A = computeLeft(
             x,
-            None,  # psi
+            psi[iteration],  # psi
             potential[iteration + 1],
             constants.dx,
             constants.dt,

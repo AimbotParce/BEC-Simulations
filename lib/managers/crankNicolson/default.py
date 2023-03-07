@@ -12,9 +12,9 @@ def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     x : jnp.ndarray
         The x values of the grid.
     psi : jnp.ndarray
-        The wave function at the current time step.
+        The wave function at the CURRENT time step.
     potential : jnp.ndarray
-        The potential at the current time step.
+        The potential at the CURRENT time step.
     dx : float
         The step size in x.
     dt : float
@@ -28,15 +28,12 @@ def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     """
     result = jnp.zeros((len(x), len(x)), dtype=jnp.complex128)
     mainDiagonal = (
-        1
-        + dt / (1j * hbar) * potential
-        + dt * interactionConstant * jnp.abs(psi) ** 2 / (1j * hbar)
-        + hbar * dt / (2 * mass * dx**2 * 1j)
+        4 * mass * dx**2 / (hbar**2) * (1j * hbar / dt + potential + interactionConstant * jnp.abs(psi) ** 2) + 2
     )
     indices = jnp.diag_indices(len(x))
     result = result.at[indices].set(mainDiagonal)
 
-    others = -hbar * dt / (4 * mass * dx**2 * 1j)
+    others = -1
     indices = jnp.diag_indices(len(x) - 1)
     indices = (indices[0] + 1, indices[1])
     result = result.at[indices].set(others)
@@ -62,9 +59,9 @@ def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     x : jnp.ndarray
         The x values of the grid.
     psi : jnp.ndarray
-        The wave function at the future time step.
+        The wave function at the CURRENT time step.
     potential : jnp.ndarray
-        The potential at the future time step.
+        The potential at the FUTURE time step.
     dx : float
         The step size in x.
     dt : float
@@ -77,11 +74,13 @@ def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
         The interaction constant. (g)
     """
     result = jnp.zeros((len(x), len(x)), dtype=jnp.complex128)
-    mainDiagonal = 1 - hbar * dt / (2 * mass * dx**2 * 1j)
+    mainDiagonal = (
+        4 * mass * dx**2 / (hbar**2) * (1j * hbar / dt - potential - interactionConstant * jnp.abs(psi) ** 2) - 2
+    )
     indices = jnp.diag_indices(len(x))
     result = result.at[indices].set(mainDiagonal)
 
-    others = hbar * dt / (4 * mass * dx**2 * 1j)
+    others = 1
     indices = jnp.diag_indices(len(x) - 1)
     indices = (indices[0] + 1, indices[1])
     result = result.at[indices].set(others)
