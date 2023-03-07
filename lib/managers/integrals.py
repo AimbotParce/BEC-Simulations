@@ -42,4 +42,4 @@ def computeEnergy(x: jnp.ndarray, t: float, psi: jnp.ndarray, V: jnp.ndarray):
     potentialEnergy = V * psi
     interactionEnergy = constants.g * jnp.abs(psi) ** 2 * psi
 
-    return jnp.sum(jnp.abs(jnp.conjugate(psi) * (kineticEnergy + potentialEnergy + interactionEnergy))) * constants.dx
+    return jnp.abs(jnp.sum(jnp.conjugate(psi) * (kineticEnergy + potentialEnergy + interactionEnergy))) * constants.dx
