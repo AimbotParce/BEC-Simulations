@@ -40,11 +40,10 @@ def simulate(
     potential = jnp.zeros((len(t), len(x)), dtype=jnp.float64)
     for iteration in tqdm(range(0, len(t)), desc="Potential"):
         potential = potential.at[iteration].set(V(x, t[iteration]))
-
     log.info("Running the simulation...")
 
     # Preallocate A
-    A = computeLeft(x, psi, V(0, 0), constants.dx, constants.dt, constants.mass, constants.hbar, constants.g)
+    A = jnp.zeros((len(x), len(x)), dtype=jnp.complex128)
     log.info(
         "Memory allocated: %.2f MB",
         (psi.nbytes + x.nbytes + t.nbytes + A.nbytes * 2 + potential.nbytes) / 1024 / 1024,
