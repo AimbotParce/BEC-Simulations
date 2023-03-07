@@ -2,6 +2,8 @@ import jax.numpy as jnp
 
 import lib.constants as constants
 
+constants.g = 0
+
 
 def waveFunction(x, t):
     timeIndependent = (
@@ -14,4 +16,4 @@ def waveFunction(x, t):
 
 
 def V(x, t):
-    return 999 * (jnp.abs(x) >= 15)
+    return 9999 * (jnp.abs(x) >= 5)
