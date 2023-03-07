@@ -6,7 +6,7 @@ import jax.numpy as jnp
 from tqdm import tqdm
 
 import lib.constants as constants
-from lib.managers.crankNicolson import computeLeft, computeRight
+from lib.managers.crankNicolson.default import computeLeft, computeRight
 
 
 def simulate(

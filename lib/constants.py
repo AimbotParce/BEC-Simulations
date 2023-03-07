@@ -22,8 +22,8 @@ dt = 0.005
 r = dt / (dx**2)
 
 # Space interval [m]
-xMin = -25
-xMax = 25
+xMin = -10
+xMax = 10
 
 # Time interval [s]
 tMin = 0
