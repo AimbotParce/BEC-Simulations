@@ -27,7 +27,7 @@ xMax = 10
 
 # Time interval [s]
 tMin = 0
-tMax = 10
+tMax = 5
 
 # Number of space and time steps
 xCount = int((xMax - xMin) / dx)
