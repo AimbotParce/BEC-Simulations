@@ -1,6 +1,7 @@
-<img src="https://user-images.githubusercontent.com/40344474/223997006-4c4ae49e-3a96-43cb-95ef-9a9727b502d5.png#gh-light-mode-only" width=30% align="center">
-<img src="https://user-images.githubusercontent.com/40344474/223997775-5516082f-edf9-4c87-9c30-a5734f2d2321.png#gh-dark-mode-only" width=30% align="center">
-
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/40344474/223997006-4c4ae49e-3a96-43cb-95ef-9a9727b502d5.png#gh-light-mode-only" width=30% >
+  <img src="https://user-images.githubusercontent.com/40344474/223997775-5516082f-edf9-4c87-9c30-a5734f2d2321.png#gh-dark-mode-only" width=30% >
+</p>
 ## Simulation of a Bose Einstein Condensate
 
 A simulation program for Bose Einstein Condensates (BECs) that uses the **Crank-Nicolson method** is a powerful tool for investigating the properties of these exotic quantum systems. This program allows the user to specify any wave function and potential for the BEC, and then use the Crank-Nicolson method to simulate the dynamics of the system over time. The Crank-Nicolson method is a numerical technique for solving partial differential equations that is especially well-suited for simulating quantum systems like BECs, where the wave function is described by a complex-valued function that satisfies the **Gross-Pitaevskii equation**.
