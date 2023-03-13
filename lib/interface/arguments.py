@@ -24,6 +24,15 @@ def setupParser():
     )
 
     parser.add_argument(
+        "-o",
+        "--output",
+        help="Output file for the simulation (.npy)",
+        type=str,
+        required=False,
+        default=None,
+    )
+
+    parser.add_argument(
         "-cn",
         "--crank-nicolson",
         help="Python file with the Crank-Nicolson module",

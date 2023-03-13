@@ -1,7 +1,9 @@
 import inspect
 import logging as log
 import os
+from argparse import Namespace
 from importlib.machinery import SourceFileLoader
+from typing import Union
 
 import jax
 import jax.numpy as jnp
@@ -55,26 +57,42 @@ def loadWaveFunctionAndPotential(path):
     return waveFunctionGenerator, V
 
 
-def main():
-    args = setupParser()
-    setupLog(level=args.verbose)
+def run(
+    args: Union[Namespace, dict],
+    constants: dict,
+    CNModule=CNdefault,
+):
 
     # Load the wave function and potential function
     path = os.path.abspath(args.input)
     waveFunctionGenerator, V = loadWaveFunctionAndPotential(path)
 
-    # Override constants (Do this after loading the wave function and potential function
-    # because they might have overridden some constants themselves)
-    constants.overrideConstants(args)
-
     # Setup the X and T arrays
-    x = jnp.arange(constants.xMin, constants.xMax, constants.dx)
-    t = jnp.arange(constants.tMin, constants.tMax, constants.dt)
+    x = jnp.arange(constants["xMin"], constants["xMax"], constants["dx"])
+    t = jnp.arange(constants["tMin"], constants["tMax"], constants["dt"])
 
     log.info("Compiling functions")
     waveFunctionGenerator = jax.jit(waveFunctionGenerator)
     V = jax.jit(V)
     log.info("Done")
+
+    psi = simulate(x, t, waveFunctionGenerator, V, args, constants, CNModule)
+    if not args.output:
+        animate(x, t, psi, V, args, constants, computeEnergy, computeNorm)
+    else:
+        log.info(f"Saving simulation to {args.output}")
+        if not args.output.endswith(".npy"):
+            args.output += ".npy"
+        jnp.save(args.output, psi)
+
+
+if __name__ == "__main__":
+    args = setupParser()
+    setupLog(level=args.verbose)
+
+    # Override constants (Do this after loading the wave function and potential function
+    # because they might have overridden some constants themselves)
+    constants.overrideConstants(args)
 
     constants.printConstants()
     constants.printSimulationParams()
@@ -85,9 +103,4 @@ def main():
     else:
         CNModule = CNdefault
 
-    psi = simulate(x, t, waveFunctionGenerator, V, args, constants.toDict(), CNModule)
-    animate(x, t, psi, V, args, constants.toDict(), computeEnergy, computeNorm)
-
-
-if __name__ == "__main__":
-    main()
+    run(args, constants.toDict())
