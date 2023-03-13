@@ -40,6 +40,10 @@ def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     indices = (indices[0], indices[1] + 1)
     result = result.at[indices].set(others)
 
+    # Periodic boundary conditions
+    result = result.at[(0, -1)].set(others)
+    result = result.at[(-1, 0)].set(others)
+
     return result
 
 
@@ -80,5 +84,9 @@ def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     indices = jnp.diag_indices(len(x) - 1)
     indices = (indices[0], indices[1] + 1)
     result = result.at[indices].set(others)
+
+    # Periodic boundary conditions
+    result = result.at[(0, -1)].set(others)
+    result = result.at[(-1, 0)].set(others)
 
     return result

@@ -1,13 +1,12 @@
 import logging as log
 from argparse import Namespace
-from typing import Callable
+from typing import Callable, Union
 
 import jax.numpy as jnp
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 
-import lib.constants as constants
-from lib.managers.integrals import computeEnergy, integrateProbability
+log = log.getLogger("BECsimulations")
 
 
 def animate(
@@ -15,10 +14,10 @@ def animate(
     t: jnp.ndarray,
     psi: jnp.ndarray,
     V: Callable,
-    theoreticalWaveFunction: Callable,
-    arguments: Namespace,
-    energyFunction: Callable = computeEnergy,
-    integratingFunction: Callable = integrateProbability,
+    arguments: Union[Namespace, dict],
+    constants: dict,
+    energyFunction: Callable,
+    integratingFunction: Callable,
 ):
     """
     Parameters
@@ -33,8 +32,10 @@ def animate(
         The potential function at each time step (shape: (tCount, xCount))
     theoreticalWaveFunction : Callable
         The wave function generator (signature: waveFunctionGenerator(x, t))
-    arguments : Namespace
+    arguments : Namespace | dict
         The arguments passed to the program
+    constants : dict
+        The constants used in the simulation
     energyFunction : Callable
         The energy function (signature: energy(x, psi, V))
     integratingFunction : Callable
@@ -47,8 +48,8 @@ def animate(
     log.info("Initializing animation...")
     # Animation
     fig, ax = plt.subplots()
-    ax.set_ylim(constants.plotYMin, constants.plotYMax)
-    ax.set_xlim(constants.xMin, constants.xMax)
+    ax.set_ylim(constants["plotYMin"], constants["plotYMax"])
+    ax.set_xlim(constants["xMin"], constants["xMax"])
     ax.set_xlabel("x")
     ax.set_ylabel("psi(x), V(x)")
     ax.set_title("Simulation of the Gross-Pitaevskii equation")
@@ -56,16 +57,15 @@ def animate(
     # Lines
     (potential,) = ax.plot(x, V(x, 0), color="red")
     (probability,) = ax.plot(x, jnp.abs(psi[0]) ** 2)
-    (realPart,) = ax.plot(x, jnp.real(psi[0]))
-    (imaginaryPart,) = ax.plot(x, jnp.imag(psi[0]))
+    if arguments.showParts:
+        (realPart,) = ax.plot(x, jnp.real(psi[0]))
+        (imaginaryPart,) = ax.plot(x, jnp.imag(psi[0]))
 
-    plotLines = [potential, probability, realPart, imaginaryPart]
-    legendKeys = ["V(x)", "Probability", "Real part", "Imaginary part"]
-
-    if arguments.showTheoretical:
-        (theoretical,) = ax.plot(x, jnp.abs(theoreticalWaveFunction(x, 0)) ** 2, color="black")
-        plotLines.append(theoretical)
-        legendKeys.append("Theoretical")
+    plotLines = [potential, probability]
+    legendKeys = ["V(x)", "Probability"]
+    if arguments.showParts:
+        plotLines += [realPart, imaginaryPart]
+        legendKeys += ["Real part", "Imaginary part"]
 
     # Legends
     ax.legend(plotLines, legendKeys, loc="lower right")
@@ -79,21 +79,32 @@ def animate(
         time = t[iteration]
         # Update texts
         timeText.set_text("t = %.2f" % time)
-        cumulativeProbabilityText.set_text("Norm = %.10f" % integratingFunction(x, psi[iteration]))
-        energyText.set_text("Energy = %.8f" % energyFunction(x, time, psi[iteration], V(x, time)))
+        cumulativeProbabilityText.set_text("Norm = %.10f" % integratingFunction(x, psi[iteration], constants["dx"]))
+        energyText.set_text(
+            "Energy = %.8f"
+            % energyFunction(
+                x,
+                time,
+                psi[iteration],
+                V(x, time),
+                constants["dx"],
+                constants["g"],
+                constants["mass"],
+                constants["hbar"],
+            )
+        )
 
         # Update lines
         potential.set_ydata(V(x, time))
         probability.set_ydata(jnp.abs(psi[iteration]) ** 2)
-        realPart.set_ydata(jnp.real(psi[iteration]))
-        imaginaryPart.set_ydata(jnp.imag(psi[iteration]))
-        if arguments.showTheoretical:
-            theoretical.set_ydata(jnp.abs(theoreticalWaveFunction(x, time)) ** 2)
+        if arguments.showParts:
+            realPart.set_ydata(jnp.real(psi[iteration]))
+            imaginaryPart.set_ydata(jnp.imag(psi[iteration]))
 
     log.info("Loading animation...")
 
     anim = animation.FuncAnimation(
-        fig, update, frames=range(0, constants.tCount, constants.plotStep), interval=1, repeat=True
+        fig, update, frames=range(0, constants["tCount"], constants["plotStep"]), interval=1, repeat=True
     )
     plt.show()
 

@@ -6,6 +6,7 @@ def setupParser():
         description="Run the Crank-Nicolson simulation for the Gross-Pitaevskii equation",
         epilog="This is for a physics' final degree project at the University of Barcelona",
     )
+
     parser.add_argument(
         "-v",
         "--verbose",
@@ -13,6 +14,7 @@ def setupParser():
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         default="INFO",
     )
+
     parser.add_argument(
         "-i",
         "--input",
@@ -22,12 +24,23 @@ def setupParser():
     )
 
     parser.add_argument(
-        "-t",
-        "--show-theoretical",
-        help="Show the theoretical wave function",
-        action="store_true",
-        dest="showTheoretical",
+        "-cn",
+        "--crank-nicolson",
+        help="Python file with the Crank-Nicolson module",
+        type=str,
+        required=False,
+        default=None,
+        dest="CNmodule",
     )
+
+    parser.add_argument(
+        "-sp",
+        "--show-parts",
+        help="Show imaginary and real parts of the wave function",
+        action="store_true",
+        dest="showParts",
+    )
+
     parser.add_argument(
         "-inan",
         "--ignore-nan",

@@ -1,11 +1,9 @@
 import jax
 import jax.numpy as jnp
 
-import lib.constants as constants
-
 
 @jax.jit
-def integrateProbability(x: jnp.ndarray, psi: jnp.ndarray):
+def computeNorm(x: jnp.ndarray, psi: jnp.ndarray, dx: float):
     """
     Compute the probability of finding the particle in the system.
 
@@ -16,11 +14,20 @@ def integrateProbability(x: jnp.ndarray, psi: jnp.ndarray):
     psi : jax.numpy.ndarray
         The wave function at each time step (shape: (tCount, xCount))
     """
-    return jnp.sum(jnp.abs(psi) ** 2) * constants.dx
+    return jnp.sum(jnp.abs(psi) ** 2) * dx
 
 
 @jax.jit
-def computeEnergy(x: jnp.ndarray, t: float, psi: jnp.ndarray, V: jnp.ndarray):
+def computeEnergy(
+    x: jnp.ndarray,
+    t: float,
+    psi: jnp.ndarray,
+    V: jnp.ndarray,
+    dx: float,
+    interactionConstant: float,
+    mass: float,
+    hbar: float,
+):
     """
     Compute the energy of the system.
 
@@ -36,10 +43,8 @@ def computeEnergy(x: jnp.ndarray, t: float, psi: jnp.ndarray, V: jnp.ndarray):
         The potential function at each time step (signature: V(x, t))
     """
 
-    kineticEnergy = (
-        -constants.hbar**2 / 2 / constants.mass * jnp.gradient(jnp.gradient(psi, constants.dx), constants.dx)
-    )
+    kineticEnergy = -(hbar**2) / 2 / mass * jnp.gradient(jnp.gradient(psi, dx), dx)
     potentialEnergy = V * psi
-    interactionEnergy = constants.g * jnp.abs(psi) ** 2 * psi
+    interactionEnergy = interactionConstant * jnp.abs(psi) ** 2 * psi
 
-    return jnp.abs(jnp.sum(jnp.conjugate(psi) * (kineticEnergy + potentialEnergy + interactionEnergy))) * constants.dx
+    return jnp.abs(jnp.sum(jnp.conjugate(psi) * (kineticEnergy + potentialEnergy + interactionEnergy))) * dx

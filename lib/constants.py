@@ -116,3 +116,18 @@ def overrideConstants(args):
             setattr(sys.modules[__name__], name, value)
 
             log.info(f"Overriding constant {name} with value {value}")
+
+    # Recalculate derived constants
+    global chemicalPotential, healingLength, xCount, tCount, r, plotFPS
+    chemicalPotential = jnp.abs(g) * baseDensity
+    healingLength = hbar / jnp.sqrt(2 * mass * chemicalPotential)
+    xCount = int((xMax - xMin) / dx)
+    tCount = int((tMax - tMin) / dt)
+    r = dt / (dx**2)
+    plotFPS = 1 / plotPause
+
+
+def toDict():
+    return {
+        name: getattr(sys.modules[__name__], name) for name in dir(sys.modules[__name__]) if not name.startswith("_")
+    }

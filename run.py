@@ -10,10 +10,14 @@ import lib.constants as constants
 from lib.interface.arguments import setupParser
 from lib.interface.logging import setupLog
 from lib.managers.animation import animate
+from lib.managers.crankNicolson import default as CNdefault
+from lib.managers.integrals import computeEnergy, computeNorm
 from lib.managers.simulation import simulate
 from lib.waveFunctions import *
 
 jax.config.update("jax_enable_x64", True)
+
+log = log.getLogger("BECsimulations")
 
 
 def loadWaveFunctionAndPotential(path):
@@ -75,8 +79,14 @@ def main():
     constants.printConstants()
     constants.printSimulationParams()
     constants.printAnimationParams()
-    psi = simulate(x, t, waveFunctionGenerator, V, args)
-    animate(x, t, psi, V, waveFunctionGenerator, args)
+
+    if args.CNmodule:
+        CNModule = SourceFileLoader("module", args.CNmodule).load_module()
+    else:
+        CNModule = CNdefault
+
+    psi = simulate(x, t, waveFunctionGenerator, V, args, constants.toDict(), CNModule)
+    animate(x, t, psi, V, args, constants.toDict(), computeEnergy, computeNorm)
 
 
 if __name__ == "__main__":
