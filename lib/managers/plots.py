@@ -35,3 +35,22 @@ def plotEvolutionImageSinusWave(path, output=None):
         plt.savefig(output)
     else:
         plt.show()
+
+
+def plotEvolutionImageCosineWave(path, output=None):
+    psi = np.load(path)
+    plt.figure()
+    plt.imshow(np.abs(psi) ** 2, aspect="auto")
+    plt.xlabel("x")
+    plt.ylabel("t")
+    plt.colorbar()
+
+    # Add sinus wave sin(t)
+    t = np.arange(0, psi.shape[0])
+    x = 15 * np.cos(t * 15 / psi.shape[0]) + psi.shape[1] / 2
+    plt.plot(x, t, color="red")
+
+    if output:
+        plt.savefig(output)
+    else:
+        plt.show()
