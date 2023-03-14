@@ -17,6 +17,7 @@ def simulate(
     arguments: Union[Namespace, dict],
     constants: dict,
     crankNicolson: ModuleType,
+    percentDict: dict = {},
 ) -> jnp.ndarray:
     """
     Simulate the time evolution of the Gross-Pitaevskii equation using the Crank-Nicolson method.
@@ -37,8 +38,15 @@ def simulate(
         The constants used in the simulation.
     crankNicolson : ModuleType
         The module containing the Crank-Nicolson functions (computeLeft, computeRight)
+    percentDict : dict
+        Dictionary onto which to set the variable "percet" to the current percentage of the simulation.
+        THIS IS UGLY, BUT IT'S THE ONLY WAY I FOUND TO UPDATE THE PERCENTAGE IN THE MAIN THREAD (PASS BY REFERENCE)
 
     """
+    if not "percent" in percentDict:
+        percentDict["percent"] = 0
+
+    disableTQDM = not log.isEnabledFor(log.INFO)
     psi = jnp.zeros((len(t), len(x)), dtype=jnp.complex128)
 
     log.info("Crank-Nicolson method for the time evolution of the Gross-Pitaevskii equation")
@@ -48,7 +56,7 @@ def simulate(
     log.info("Precomputing the potential over time...")
 
     potential = jnp.zeros((len(t), len(x)), dtype=jnp.float64)
-    for iteration in tqdm(range(0, len(t)), desc="Potential"):
+    for iteration in tqdm(range(0, len(t)), desc="Potential", disable=disableTQDM):
         potential = potential.at[iteration].set(V(x, t[iteration]))
     log.info("Running the simulation...")
 
@@ -64,7 +72,8 @@ def simulate(
     # psi = psi.at[0, -1].set(0)  # Set the last element to 0 to avoid NaNs
     # This doesn't do anything.
 
-    for iteration in tqdm(range(0, constants["tCount"]), desc="Simulation"):
+    for iteration in tqdm(range(0, constants["tCount"]), desc="Simulation", disable=disableTQDM):
+        percentDict["percent"] = iteration / constants["tCount"] * 100
         time = t[iteration]
         A = crankNicolson.computeLeft(
             x,

@@ -10,7 +10,6 @@ from typing import Union
 
 import jax
 import jax.numpy as jnp
-
 import lib.constants as constants
 from lib.interface.arguments import setupParser
 from lib.interface.logging import setupLog
@@ -65,6 +64,7 @@ def run(
     args: Union[Namespace, dict],
     constants: dict,
     CNModule=CNdefault,
+    percentDict: dict = {},
 ):
     # Load the wave function and potential function
     path = os.path.abspath(args.input)
@@ -79,7 +79,7 @@ def run(
     jittedV = jax.jit(V)
     log.info("Done")
 
-    psi = simulate(x, t, jittedWaveFunction, jittedV, args, constants, CNModule)
+    psi = simulate(x, t, jittedWaveFunction, jittedV, args, constants, CNModule, percentDict)
     if not args.output:
         animate(x, t, psi, jittedV, args, constants, computeEnergy, computeNorm)
     else:
@@ -102,6 +102,14 @@ def run(
             )
 
 
+def getSimulatorModule(CNModPath: str = None):
+    if CNModPath:
+        log.info(f"Using Crank-Nicolson module from {CNModPath}")
+        return SourceFileLoader("module", CNModPath).load_module()
+    else:
+        return CNdefault
+
+
 if __name__ == "__main__":
     args = setupParser()
     setupLog(level=args.verbose)
@@ -114,10 +122,6 @@ if __name__ == "__main__":
     constants.printSimulationParams()
     constants.printAnimationParams()
 
-    if args.CNmodule:
-        CNModule = SourceFileLoader("module", args.CNmodule).load_module()
-        log.info(f"Using Crank-Nicolson module from {args.CNmodule}")
-    else:
-        CNModule = CNdefault
+    CNModule = getSimulatorModule(args.CNModule)
 
-    run(args, constants.toDict())
+    run(args, constants.toDict(), CNModule)
