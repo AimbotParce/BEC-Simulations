@@ -26,7 +26,7 @@ def setupParser():
     parser.add_argument(
         "-o",
         "--output",
-        help="Output file for the simulation (.npy)",
+        help="Output folder for the simulation",
         type=str,
         required=False,
         default=None,

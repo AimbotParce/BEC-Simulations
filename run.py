@@ -1,6 +1,9 @@
 import inspect
+import json
 import logging as log
+import marshal
 import os
+import pickle
 from argparse import Namespace
 from importlib.machinery import SourceFileLoader
 from typing import Union
@@ -15,6 +18,7 @@ from lib.managers.animation import animate
 from lib.managers.crankNicolson import default as CNdefault
 from lib.managers.integrals import computeEnergy, computeNorm
 from lib.managers.simulation import simulate
+from lib.utils.metadata import toJSON
 from lib.waveFunctions import *
 
 jax.config.update("jax_enable_x64", True)
@@ -72,18 +76,32 @@ def run(
     t = jnp.arange(constants["tMin"], constants["tMax"], constants["dt"])
 
     log.info("Compiling functions")
-    waveFunctionGenerator = jax.jit(waveFunctionGenerator)
-    V = jax.jit(V)
+    jittedWaveFunction = jax.jit(waveFunctionGenerator)
+    jittedV = jax.jit(V)
     log.info("Done")
 
-    psi = simulate(x, t, waveFunctionGenerator, V, args, constants, CNModule)
+    psi = simulate(x, t, jittedWaveFunction, jittedV, args, constants, CNModule)
     if not args.output:
-        animate(x, t, psi, V, args, constants, computeEnergy, computeNorm)
+        animate(x, t, psi, jittedV, args, constants, computeEnergy, computeNorm)
     else:
-        log.info(f"Saving simulation to {args.output}")
-        if not args.output.endswith(".npy"):
-            args.output += ".npy"
-        jnp.save(args.output, psi)
+        log.info(f"Saving simulation to folder {args.output}")
+        if not os.path.exists(args.output):
+            os.mkdir(args.output)
+
+        jnp.save(os.path.join(args.output, "evolution.npy"), psi)
+        # Save the metadata:
+        with open(os.path.join(args.output, "metadata.json"), "w") as f:
+            json.dump(
+                {
+                    "constants": toJSON(constants),
+                    "potential": pickle.dumps(V).decode("latin-1"),
+                    "wave_function": pickle.dumps(waveFunctionGenerator).decode("latin-1"),
+                    "x": x.tolist(),
+                    "t": t.tolist(),
+                    # "simulator": CNModule.__name__,
+                },
+                f,
+            )
 
 
 if __name__ == "__main__":
@@ -100,6 +118,7 @@ if __name__ == "__main__":
 
     if args.CNmodule:
         CNModule = SourceFileLoader("module", args.CNmodule).load_module()
+        log.info(f"Using Crank-Nicolson module from {args.CNmodule}")
     else:
         CNModule = CNdefault
 

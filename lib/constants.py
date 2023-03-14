@@ -1,3 +1,6 @@
+# To check if something is a callable or module
+import inspect
+import json
 import logging as log
 import sys
 
@@ -129,5 +132,9 @@ def overrideConstants(args):
 
 def toDict():
     return {
-        name: getattr(sys.modules[__name__], name) for name in dir(sys.modules[__name__]) if not name.startswith("_")
+        name: getattr(sys.modules[__name__], name)
+        for name in dir(sys.modules[__name__])
+        if not name.startswith("_")
+        and not inspect.ismodule(getattr(sys.modules[__name__], name))
+        and not inspect.isfunction(getattr(sys.modules[__name__], name))
     }
