@@ -1,7 +1,7 @@
 import base64
 import inspect
 import json
-import logging as log
+import logging
 import marshal
 import os
 from argparse import Namespace
@@ -11,18 +11,18 @@ from typing import Union
 import jax
 import jax.numpy as jnp
 
-from ...lib import constants
-from ...lib.interface.arguments import setupParser
-from ...lib.interface.logging import setupLog
-from ...lib.managers.animation import animate
-from ...lib.managers.crankNicolson import default as CNdefault
-from ...lib.managers.integrals import computeEnergy, computeNorm
-from ...lib.managers.simulation import simulate
-from ...lib.utils.metadata import toJSON
+from .. import constants
+from ..interface.arguments import setupParser
+from ..interface.logging import setupLog
+from ..managers.animation import animate
+from ..managers.crankNicolson import default as CNdefault
+from ..managers.integrals import computeEnergy, computeNorm
+from ..managers.simulation import simulate
+from ..utils.metadata import toJSON
 
 jax.config.update("jax_enable_x64", True)
 
-log = log.getLogger("BECsimulations")
+log = logging.getLogger("BECsimulations")
 
 
 def loadWaveFunctionAndPotential(path):

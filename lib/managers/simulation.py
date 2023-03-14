@@ -1,4 +1,4 @@
-import logging as log
+import logging
 from argparse import Namespace
 from types import ModuleType
 from typing import Callable, Union
@@ -6,7 +6,7 @@ from typing import Callable, Union
 import jax.numpy as jnp
 from tqdm import tqdm
 
-log = log.getLogger("BECsimulations")
+log = logging.getLogger("BECsimulations")
 
 
 def simulate(
@@ -46,7 +46,7 @@ def simulate(
     if not "percent" in percentDict:
         percentDict["percent"] = 0
 
-    disableTQDM = not log.isEnabledFor(log.INFO)
+    disableTQDM = not log.isEnabledFor(logging.INFO)
     psi = jnp.zeros((len(t), len(x)), dtype=jnp.complex128)
 
     log.info("Crank-Nicolson method for the time evolution of the Gross-Pitaevskii equation")

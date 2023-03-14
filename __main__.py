@@ -1,7 +1,9 @@
-from .lib import constants
-from .lib.interface.arguments import setupParser
-from .lib.interface.logging import setupLog
-from .lib.managers.run import getSimulatorModule, run
+import os
+
+from lib import constants
+from lib.interface.arguments import setupParser
+from lib.interface.logging import setupLog
+from lib.managers.run import getSimulatorModule, run
 
 args = setupParser()
 setupLog(level=args.verbose)
@@ -14,6 +16,6 @@ constants.printConstants()
 constants.printSimulationParams()
 constants.printAnimationParams()
 
-CNModule = getSimulatorModule(args.CNModule)
+CNModule = getSimulatorModule(os.path.abspath(args.CNmodule))
 
 run(args, constants.toDict(), CNModule)
