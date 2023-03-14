@@ -1,7 +1,7 @@
 import argparse
 
 
-def setupParser():
+def setupParser(parseArgs=True):
     parser = argparse.ArgumentParser(
         description="Run the Crank-Nicolson simulation for the Gross-Pitaevskii equation",
         epilog="This is for a physics' final degree project at the University of Barcelona",
@@ -67,4 +67,7 @@ def setupParser():
         dest="overrideConstants",
     )
 
-    return parser.parse_args()
+    if parseArgs:
+        return parser.parse_args()
+    else:
+        return parser
