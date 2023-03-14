@@ -16,6 +16,6 @@ To create a new simulation, one can just make a new **.py** file anywhere, onto 
 One can then run the simulation by executing the following command:
 
 ```bash
-python3 run.py -i <path> [-v <LEVEL>] [-t] [-inan] [-oc <const=value>]
+python3 BEC_simulations -i <path> [-v <LEVEL>] [-t] [-inan] [-oc <const=value>]
 ```
-Where `-v` sets the verbosity level, `-t/--show-theoretical` shows the theoretical wave function over time (one can define only the wave function for t=0, which is the one used for the simulation, or define how it should evolve over time, for comparison reasons on the animation.), `-inan/--ignore-nan` ignores the error for NaN encountered and `-oc/--override-constants` allows the user to change the value for a global constant by providing it in the form of `constName=value`.
+Where `-v` sets the verbosity level, `-t/--show-theoretical` shows the theoretical wave function over time (one can define only the wave function for t=0, which is the one used for the simulation, or define how it should evolve over time, for comparison reasons on the animation.), `-inan/--ignore-nan` ignores the error for NaN encountered and `-oc/--override-constants` allows the user to change the value for a global constant by providing it in the form of `constName=value`. Note that **BEC_simulations** is the name of the folder, and is not a `.py` file, however it has a `__main__.py` file, which is the one that is executed when the command is run.

@@ -10,15 +10,15 @@ from typing import Union
 
 import jax
 import jax.numpy as jnp
-import lib.constants as constants
-from lib.interface.arguments import setupParser
-from lib.interface.logging import setupLog
-from lib.managers.animation import animate
-from lib.managers.crankNicolson import default as CNdefault
-from lib.managers.integrals import computeEnergy, computeNorm
-from lib.managers.simulation import simulate
-from lib.utils.metadata import toJSON
-from lib.waveFunctions import *
+
+from ...lib import constants
+from ...lib.interface.arguments import setupParser
+from ...lib.interface.logging import setupLog
+from ...lib.managers.animation import animate
+from ...lib.managers.crankNicolson import default as CNdefault
+from ...lib.managers.integrals import computeEnergy, computeNorm
+from ...lib.managers.simulation import simulate
+from ...lib.utils.metadata import toJSON
 
 jax.config.update("jax_enable_x64", True)
 
@@ -108,20 +108,3 @@ def getSimulatorModule(CNModPath: str = None):
         return SourceFileLoader("module", CNModPath).load_module()
     else:
         return CNdefault
-
-
-if __name__ == "__main__":
-    args = setupParser()
-    setupLog(level=args.verbose)
-
-    # Override constants (Do this after loading the wave function and potential function
-    # because they might have overridden some constants themselves)
-    constants.overrideConstants(args)
-
-    constants.printConstants()
-    constants.printSimulationParams()
-    constants.printAnimationParams()
-
-    CNModule = getSimulatorModule(args.CNModule)
-
-    run(args, constants.toDict(), CNModule)

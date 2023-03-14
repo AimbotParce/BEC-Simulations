@@ -3,7 +3,7 @@ Theoretical wave functions and initial conditions.
 """
 import jax.numpy as jnp
 
-import lib.constants as constants
+from ..lib import constants
 
 
 def brightSolitonMalo(x, t=0):
