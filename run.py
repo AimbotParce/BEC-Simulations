@@ -1,9 +1,9 @@
+import base64
 import inspect
 import json
 import logging as log
 import marshal
 import os
-import pickle
 from argparse import Namespace
 from importlib.machinery import SourceFileLoader
 from typing import Union
@@ -66,7 +66,6 @@ def run(
     constants: dict,
     CNModule=CNdefault,
 ):
-
     # Load the wave function and potential function
     path = os.path.abspath(args.input)
     waveFunctionGenerator, V = loadWaveFunctionAndPotential(path)
@@ -94,13 +93,12 @@ def run(
             json.dump(
                 {
                     "constants": toJSON(constants),
-                    "potential": pickle.dumps(V).decode("latin-1"),
-                    "wave_function": pickle.dumps(waveFunctionGenerator).decode("latin-1"),
-                    "x": x.tolist(),
-                    "t": t.tolist(),
-                    # "simulator": CNModule.__name__,
+                    "potential": marshal.dumps(V.__code__).decode("latin-1"),
+                    "wave_function": marshal.dumps(waveFunctionGenerator.__code__).decode("latin-1"),
+                    "simulator": CNModule.__name__,
                 },
                 f,
+                indent=4,
             )
 
 
