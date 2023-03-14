@@ -11,7 +11,40 @@ To accelerate the simulation process, this program uses **JAX** instead of simpl
 
 This program is being used to simulate Bose-Einstein Condensate solutions such as **bright and dark solitons** on a Kapitza pendulum-like potential. This potential creates a periodic modulation in space and time, which can be used to study the behavior of BECs in non-trivial geometries.
 
+## Installation
+
+To install the program, one must first clone the repository:
+
+```bash
+git clone https://github.com/AimbotParce/BEC-Simulations
+```
+  
+Then, one must install the dependencies:
+  
+```bash
+pip3 install -r requirements.txt
+```
+
+Keep in mind that this program uses JAX, which requires a GPU to run. If you do not have a GPU, you can still run the program, but it will be much slower. If you do have a GPU, you should install the GPU drivers, CUDA, and cuDNN. I strongly recommend, as well, that you compile JAX from source.
+
+You can find detailed instructions on how to install JAX on JAX's [installation guide](https://github.com/google/jax#installation). JAX can work in Windows Subsystem for Linux (WSL), but I didn't manage to make it work on GPU.
+
+Here's what I did to install JAX on my machine:
+
+1. Install [nvidia drivers](https://www.nvidia.com/Download/index.aspx?lang=en-us) with `sudo apt install nvidia-driver-XXX`, version `530.30.02` in my case.
+2. Install [CUDA](https://developer.nvidia.com/cuda-downloads) and [cuDNN](https://developer.nvidia.com/cudnn), versions `11.5` and `8.8.1` in my case.
+
+I recommend checking the [compatibility matrix](https://docs.nvidia.com/deeplearning/cudnn/support-matrix/index.html) to make sure you're installing the correct versions.
+
+3. Install JAX with `pip install --upgrade "jax[cudaXX_cudnnYY]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html`, where `XX` is the CUDA version you installed, and `YY` is the cuDNN version.
+
+One can check if JAX-GPU is working by checking the output of `jax.devices()`.
+
+## Getting Started
+
 To create a new simulation, one can just make a new **.py** file anywhere, onto which one must add two functions: `waveFunction(x,t) -> jax.numpy.ndarray`, which takes `x : jax.numpy.ndarray` and `t : float` as the space grid (in meters) and the time (in seconds) and returns the complex wave function evaluated over all the position lattice x at time t; and `V(x, t) -> jax.numpy.ndarray`, which also takes `x` and `t` and shall return the real function for the potential evaluated over all x and at time t.
+
+## Usage
 
 One can then run the simulation by executing the following command:
 
