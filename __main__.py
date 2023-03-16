@@ -16,6 +16,6 @@ constants.printConstants()
 constants.printSimulationParams()
 constants.printAnimationParams()
 
-CNModule = getSimulatorModule(os.path.abspath(args.CNmodule))
+CNModule = getSimulatorModule(os.path.abspath(args.CNmodule) if args.CNmodule else None)
 
 run(args, constants.toDict(), CNModule)
