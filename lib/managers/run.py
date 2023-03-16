@@ -104,8 +104,8 @@ def run(
             json.dump(
                 {
                     "constants": toJSON(constants),
-                    "potential": marshal.dumps(V.__code__).decode("latin-1"),
-                    "wave_function": marshal.dumps(waveFunctionGenerator.__code__).decode("latin-1"),
+                    "potential": base64.b64encode(marshal.dumps(V.__code__)).decode("utf-8"),
+                    "wave_function": base64.b64encode(marshal.dumps(waveFunctionGenerator.__code__)).decode("utf-8"),
                     "simulator": CNModule.__name__,
                 },
                 f,

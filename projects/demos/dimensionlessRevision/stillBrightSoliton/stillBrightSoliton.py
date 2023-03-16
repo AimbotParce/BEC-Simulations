@@ -1,7 +1,7 @@
 import jax.numpy as jnp
 
 eta = 1
-kappa = 1
+kappa = 0
 omega = (kappa**2 + eta**2) / 2
 v = kappa
 
