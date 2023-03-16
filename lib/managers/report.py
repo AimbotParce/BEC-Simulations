@@ -27,11 +27,33 @@ with open(os.path.join(args.path, "metadata.json"), "r") as f:
     metadata = json.load(f)
 constants = metadata["constants"]
 
+
+I = np.arange(psi.shape[1])
+J = np.arange(psi.shape[0])
+T = np.linspace(constants["tMin"], constants["tMax"], psi.shape[0])
+X = np.linspace(constants["xMin"], constants["xMax"], psi.shape[1])
+
+
+# #################################
+# #             Plots             #
+# #################################
+
 # Plot the evolution
 evolution = plt.figure()
 plt.imshow(np.abs(psi) ** 2, aspect="auto")
 plt.xlabel("Position [a.u.]")
 plt.ylabel("Time [a.u.]")
+
+# Change the ticks to show the real values
+xTicks = X[:: int(len(X) / 10)]
+xTicksLabels = [f"{x:.2f}" for x in xTicks]
+plt.xticks(I[:: int(len(I) / 10)], xTicksLabels)
+
+tTicks = T[:: int(len(T) / 10)]
+tTicksLabels = [f"{t:.2f}" for t in tTicks]
+plt.yticks(J[:: int(len(J) / 10)], tTicksLabels)
+
+
 plt.title("Evolution of the wave function")
 plt.colorbar()
 plt.savefig(os.path.join(args.path, "evolution.png"))
@@ -41,18 +63,20 @@ theoretical = plt.figure()
 plt.imshow(np.abs(teo) ** 2, aspect="auto")
 plt.xlabel("Position [a.u.]")
 plt.ylabel("Time [a.u.]")
+
+# Change the ticks to show the real values
+xTicks = X[:: int(len(X) / 10)]
+xTicksLabels = [f"{x:.2f}" for x in xTicks]
+plt.xticks(I[:: int(len(I) / 10)], xTicksLabels)
+
+tTicks = T[:: int(len(T) / 10)]
+tTicksLabels = [f"{t:.2f}" for t in tTicks]
+plt.yticks(J[:: int(len(J) / 10)], tTicksLabels)
+
 plt.title("Theoretical evolution of the wave function")
 plt.colorbar()
 plt.savefig(os.path.join(args.path, "theoretical.png"))
 
-# Plot the evolution of the energy
-
-I = np.arange(psi.shape[1])
-J = np.arange(psi.shape[0])
-T = np.linspace(constants["tMin"], constants["tMax"], psi.shape[0])
-X = np.linspace(constants["xMin"], constants["xMax"], psi.shape[1])
-
-# Potential function:
 
 import base64
 import marshal
@@ -98,6 +122,7 @@ energy = plt.figure()
 plt.plot(T, nrg)
 plt.xlabel("Time [a.u.]")
 plt.ylabel("Energy [a.u.]")
+plt.ylim(0, nrg.max() * 1.2)
 plt.title("Evolution of the energy")
 plt.savefig(os.path.join(args.path, "energy.png"))
 
@@ -110,6 +135,7 @@ normPlot = plt.figure()
 plt.plot(T, norm)
 plt.xlabel("Time [a.u.]")
 plt.ylabel("Norm [a.u.]")
+plt.ylim(0, norm.max() * 1.2)
 plt.title("Evolution of the norm")
 plt.savefig(os.path.join(args.path, "norm.png"))
 
@@ -123,6 +149,7 @@ normTeoPlot = plt.figure()
 plt.plot(T, normTeo)
 plt.xlabel("Time [a.u.]")
 plt.ylabel("Norm [a.u.]")
+plt.ylim(0, normTeo.max() * 1.2)
 plt.title("Evolution of the norm (theoretical)")
 
 
@@ -137,10 +164,14 @@ similarityPlot = plt.figure()
 plt.plot(T, similarity)
 plt.xlabel("Time [a.u.]")
 plt.ylabel("Similarity [a.u.]")
+plt.ylim(0, similarity.max() * 1.2)
 plt.title("Evolution of the similarity")
 plt.savefig(os.path.join(args.path, "similarity.png"))
 
-# Make the report (pdf)
+
+# #################################
+# #             Report            #
+# #################################
 
 import inspect
 import io
@@ -192,7 +223,6 @@ for t in text:
 
 
 # Add the plots
-
 
 # Potential
 pdf.image(os.path.join(args.path, "potential0.png"), w=140)
