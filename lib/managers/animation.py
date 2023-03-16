@@ -18,6 +18,7 @@ def animate(
     constants: dict,
     energyFunction: Callable,
     integratingFunction: Callable,
+    theoreticalPsi: jnp.ndarray = None,
 ):
     """
     Parameters
@@ -55,31 +56,35 @@ def animate(
     ax.set_title("Simulation of the Gross-Pitaevskii equation")
 
     # Lines
-    (potential,) = ax.plot(x, V(x, 0), color="red")
-    (probability,) = ax.plot(x, jnp.abs(psi[0]) ** 2)
-    if arguments.showParts:
-        (realPart,) = ax.plot(x, jnp.real(psi[0]))
-        (imaginaryPart,) = ax.plot(x, jnp.imag(psi[0]))
+    (potential,) = ax.plot(x, V(x, 0), color="red", label="V(x)")
+    (probability,) = ax.plot(x, jnp.abs(psi[0]) ** 2, label="Probability")
 
-    plotLines = [potential, probability]
-    legendKeys = ["V(x)", "Probability"]
     if arguments.showParts:
-        plotLines += [realPart, imaginaryPart]
-        legendKeys += ["Real part", "Imaginary part"]
+        (realPart,) = ax.plot(x, jnp.real(psi[0]), label="Real part")
+        (imaginaryPart,) = ax.plot(x, jnp.imag(psi[0]), label="Imaginary part")
+
+    if theoreticalPsi is not None:
+        (theoreticalProbability,) = ax.plot(
+            x, jnp.abs(theoreticalPsi[0]) ** 2, color="green", label="Theoretical probability"
+        )
 
     # Legends
-    ax.legend(plotLines, legendKeys, loc="lower right")
+    ax.legend(loc="lower right")
 
     # Texts
     timeText = ax.text(0.02, 0.95, "", transform=ax.transAxes)
     cumulativeProbabilityText = ax.text(0.02, 0.90, "", transform=ax.transAxes)
     energyText = ax.text(0.02, 0.85, "", transform=ax.transAxes)
 
+    if theoreticalPsi is not None:
+        similarityText = ax.text(0.02, 0.80, "", transform=ax.transAxes)
+
     def update(iteration):
         time = t[iteration]
         # Update texts
         timeText.set_text("t = %.2f" % time)
-        cumulativeProbabilityText.set_text("Norm = %.10f" % integratingFunction(x, psi[iteration], constants["dx"]))
+        norm = integratingFunction(x, jnp.abs(psi[iteration]) ** 2, constants["dx"])
+        cumulativeProbabilityText.set_text("Norm = %.10f" % norm)
         energyText.set_text(
             "Energy = %.8f"
             % energyFunction(
@@ -93,6 +98,14 @@ def animate(
                 constants["hbar"],
             )
         )
+        if theoreticalPsi is not None:
+            normTeo = integratingFunction(x, jnp.abs(theoreticalPsi[iteration]) ** 2, constants["dx"])
+            similarity = integratingFunction(
+                x,
+                jnp.abs(psi[iteration] * jnp.conj(theoreticalPsi[iteration])) / jnp.sqrt(normTeo * norm),
+                constants["dx"],
+            )
+            similarityText.set_text("Similarity = %.8f" % similarity)
 
         # Update lines
         potential.set_ydata(V(x, time))
@@ -100,6 +113,8 @@ def animate(
         if arguments.showParts:
             realPart.set_ydata(jnp.real(psi[iteration]))
             imaginaryPart.set_ydata(jnp.imag(psi[iteration]))
+        if theoreticalPsi is not None:
+            theoreticalProbability.set_ydata(jnp.abs(theoreticalPsi[iteration]) ** 2)
 
     log.info("Loading animation...")
 

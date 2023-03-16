@@ -51,6 +51,14 @@ def setupParser(parseArgs=True):
     )
 
     parser.add_argument(
+        "-t",
+        "--show-theoretical",
+        help="Show the theoreical time dependent wave function",
+        action="store_true",
+        dest="theoretical",
+    )
+
+    parser.add_argument(
         "-inan",
         "--ignore-nan",
         help="Ignore NaN values in the simulation",

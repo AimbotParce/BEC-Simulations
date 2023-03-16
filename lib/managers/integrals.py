@@ -3,7 +3,7 @@ import jax.numpy as jnp
 
 
 @jax.jit
-def computeNorm(x: jnp.ndarray, psi: jnp.ndarray, dx: float):
+def computeIntegral(x: jnp.ndarray, curve: jnp.ndarray, dx: float):
     """
     Compute the probability of finding the particle in the system.
 
@@ -14,7 +14,7 @@ def computeNorm(x: jnp.ndarray, psi: jnp.ndarray, dx: float):
     psi : jax.numpy.ndarray
         The wave function at each time step (shape: (tCount, xCount))
     """
-    return jnp.sum(jnp.abs(psi) ** 2) * dx
+    return jnp.sum(curve) * dx
 
 
 @jax.jit

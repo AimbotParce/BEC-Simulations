@@ -16,7 +16,7 @@ from ..interface.arguments import setupParser
 from ..interface.logging import setupLog
 from ..managers.animation import animate
 from ..managers.crankNicolson import default as CNdefault
-from ..managers.integrals import computeEnergy, computeNorm
+from ..managers.integrals import computeEnergy, computeIntegral
 from ..managers.simulation import simulate
 from ..utils.metadata import toJSON
 
@@ -80,14 +80,25 @@ def run(
     log.info("Done")
 
     psi = simulate(x, t, jittedWaveFunction, jittedV, args, constants, CNModule, percentDict)
+
+    psiTeo = None
+    if args.theoretical:
+        psiTeo = jnp.zeros_like(psi)
+        log.info("Computing theoretical wave function")
+        for j in range(0, constants["tCount"]):
+            psiTeo = psiTeo.at[j].set(jittedWaveFunction(x, t[j]))
+
     if not args.output:
-        animate(x, t, psi, jittedV, args, constants, computeEnergy, computeNorm)
+        animate(x, t, psi, jittedV, args, constants, computeEnergy, computeIntegral, psiTeo)
     else:
         log.info(f"Saving simulation to folder {args.output}")
         if not os.path.exists(args.output):
             os.mkdir(args.output)
 
         jnp.save(os.path.join(args.output, "evolution.npy"), psi)
+
+        if args.theoretical:
+            jnp.save(os.path.join(args.output, "theoretical.npy"), psiTeo)
         # Save the metadata:
         with open(os.path.join(args.output, "metadata.json"), "w") as f:
             json.dump(
