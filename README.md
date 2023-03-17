@@ -46,6 +46,16 @@ To create a new simulation, one can just make a new **.py** file anywhere, onto 
 One can then run the simulation by executing the following command:
 
 ```bash
-python3 BEC-simulations-X.X.X -i <path> [-v <LEVEL>] [-o <path>] [-cn <path>] [-sp] [-inan] [-oc <const=value>]
+python3 BEC-Simulations-X.X.X -i <path> -o <path> [-a] [-sp] [-t] [-inan] [-v <LEVEL>] [-cn <path>] [-oc <const=value>]
 ```
-Where `X.X.X` is your version of the program, `-v/--verbose` sets the verbosity level, `-o/--output` sets the path to an output folder onto which the program will save the computed wave functions and metadata, `-cn/--crank-nicolson` sets the path to a `.py` file containing the functions to compute left and right-hand matrices for the Crank-Nicolson method, `-sp/--show-parts` shows the real and imaginary parts on the otput animation, `-inan/--ignore-nan` ignores the error for NaN encountered and `-oc/--override-constants` allows the user to change the value for a global constant by providing it in the form of `constName=value`. Note that **BEC-simulations** is the name of the folder, and is not a `.py` file, however it has a `__main__.py` file, which is the one that is executed when the command is run.
+
+Where `X.X.X` is your version of the program, `-i/--input` and `-o/--output` set the input **file** (`.py` file) and output **folder** for the simulation, `-a/--animate` shows the animation when the simulation is finished, `-sp/--show-parts` shows the real and imaginary parts on the otput animation, `-t/--show-theoretical` shows the evolution of the given analytical wave function, `-inan/--ignore-nan` ignores the error that is displayed when a NaN is encountered during the simulation, `-v/--verbose` sets the verbosity level (level name, all in caps), `-oc/--override-constants` allows the user to change the value for a global constant by providing it in the form of `constName=value`, and `-cn/--crank-nicolson` sets the path to a `.py` file containing the functions to compute left and right-hand matrices for the Crank-Nicolson method.
+
+Note that **BEC-Simulations-X.X.X** is the name of the folder, and is not a `.py` file, however it has a `__main__.py` file, which is the one that is executed when the command is run.
+
+When a simulation is finished, the following script can be used to create an automatic **report** on the results. Run:
+
+```bash
+python3 BEC-Simulations-X.X.X/report.py -i <path> [-v <LEVEL>]
+```
+Where `-i/--input` sets the path to the folder containing all of the results and metadata for the simulation. This program will create a new folder named `report_images` containing all the graphics and diagrams of the results, and then create a `report.pdf` file **inside the input folder** with a summary of the parameters of the simulation, as well as the results and graphs.

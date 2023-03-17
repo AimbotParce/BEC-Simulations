@@ -60,7 +60,7 @@ def setupParser(parseArgs=True):
     parser.add_argument(
         "-t",
         "--show-theoretical",
-        help="Show the theoreical time dependent wave function",
+        help="Show the theoreical time dependent wave function in the animation",
         action="store_true",
         dest="theoretical",
     )
