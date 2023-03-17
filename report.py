@@ -142,7 +142,7 @@ plt.savefig(os.path.join(imgFolder, "waveFunction0.png"))
 print(".", end="", flush=True)
 
 
-from integrals import computeEnergy, computeIntegral
+from lib.managers.integrals import computeEnergy, computeIntegral
 
 nrg = np.zeros_like(T)
 for j in J:
