@@ -5,7 +5,7 @@ import lib.constants as constants
 constants.g = 0
 
 
-def waveFunction(x, t):
+def waveFunction(x, t, constants):
     timeIndependent = (
         jnp.sqrt(constants.baseDensity)
         / jnp.cosh(x - 1 / jnp.sqrt(2))
@@ -15,5 +15,5 @@ def waveFunction(x, t):
     return timeIndependent
 
 
-def V(x, t):
+def V(x, t, constants):
     return jnp.zeros_like(x)

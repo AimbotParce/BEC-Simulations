@@ -49,25 +49,25 @@ def simulate(
     disableTQDM = not log.isEnabledFor(logging.INFO)
     psi = jnp.zeros((len(t), len(x)), dtype=jnp.complex128)
 
-    log.info("Crank-Nicolson method for the time evolution of the Gross-Pitaevskii equation")
-    log.info("The Crank-Nicolson method solves the equation Ax(t+dt) = Bx(t)")
-    log.info("A and B can be computed at each time step")
+    # log.info("Crank-Nicolson method for the time evolution of the Gross-Pitaevskii equation")
+    # log.info("The Crank-Nicolson method solves the equation Ax(t+dt) = Bx(t)")
+    # log.info("A and B can be computed at each time step")
 
     log.info("Precomputing the potential over time...")
 
     potential = jnp.zeros((len(t), len(x)), dtype=jnp.float64)
     for iteration in tqdm(range(0, len(t)), desc="Potential", disable=disableTQDM):
-        potential = potential.at[iteration].set(V(x, t[iteration]))
+        potential = potential.at[iteration].set(V(x, t[iteration], constants))
     log.info("Running the simulation...")
 
     # Preallocate A
     A = jnp.zeros((len(x), len(x)), dtype=jnp.complex128)
     log.info(
         "Memory allocated: %.2f MB",
-        (psi.nbytes + x.nbytes + t.nbytes + A.nbytes * 2 + potential.nbytes) / 1024 / 1024,
-    )  #                                              ^ Take into account B
+        (psi.nbytes * 2 + x.nbytes + t.nbytes + A.nbytes * 2 + potential.nbytes) / 1024 / 1024,
+    )  #              ^ Consider theoretical               ^ Take into account B
 
-    psi = psi.at[0].set(waveFunctionGenerator(x, 0))
+    psi = psi.at[0].set(waveFunctionGenerator(x, 0, constants))
     # psi = psi.at[0, 0].set(0)  # Set the first element to 0 to avoid NaNs
     # psi = psi.at[0, -1].set(0)  # Set the last element to 0 to avoid NaNs
     # This doesn't do anything.
