@@ -2,7 +2,7 @@ import jax.numpy as jnp
 
 
 def waveFunction(x, t, constants):
-    eta = 1
+    eta = 1 / constants["healingLength"]
 
     kappa1 = 1
     omega1 = (kappa1**2 + eta**2) / 2

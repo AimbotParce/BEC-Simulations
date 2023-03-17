@@ -91,8 +91,7 @@ def run(
 
     jnp.save(os.path.join(args.output, "evolution.npy"), psi)
 
-    if args.theoretical:
-        jnp.save(os.path.join(args.output, "theoretical.npy"), psiTeo)
+    jnp.save(os.path.join(args.output, "theoretical.npy"), psiTeo)
     # Save the metadata:
     with open(os.path.join(args.output, "metadata.json"), "w") as f:
         json.dump(

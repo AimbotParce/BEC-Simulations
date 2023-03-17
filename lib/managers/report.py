@@ -123,7 +123,7 @@ print(".", end="", flush=True)
 
 V = np.zeros_like(psi, dtype=np.float64)
 for j in J:
-    V[j] = potential(X, T[j])
+    V[j] = potential(X, T[j], constants)
 print(".", end="", flush=True)
 
 
