@@ -64,8 +64,8 @@ def simulate(
     A = jnp.zeros((len(x), len(x)), dtype=jnp.complex128)
     log.info(
         "Memory allocated: %.2f MB",
-        (psi.nbytes + x.nbytes + t.nbytes + A.nbytes * 2 + potential.nbytes) / 1024 / 1024,
-    )  #                                              ^ Take into account B
+        (psi.nbytes * 2 + x.nbytes + t.nbytes + A.nbytes * 2 + potential.nbytes) / 1024 / 1024,
+    )  #              ^ Consider theoretical               ^ Take into account B
 
     psi = psi.at[0].set(waveFunctionGenerator(x, 0, constants))
     # psi = psi.at[0, 0].set(0)  # Set the first element to 0 to avoid NaNs
