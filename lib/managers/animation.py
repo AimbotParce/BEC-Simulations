@@ -63,7 +63,7 @@ def animate(
         (realPart,) = ax.plot(x, jnp.real(psi[0]), label="Real part")
         (imaginaryPart,) = ax.plot(x, jnp.imag(psi[0]), label="Imaginary part")
 
-    if theoreticalPsi is not None:
+    if arguments.theoretical:
         (theoreticalProbability,) = ax.plot(
             x, jnp.abs(theoreticalPsi[0]) ** 2, color="green", label="Theoretical probability"
         )
@@ -76,7 +76,7 @@ def animate(
     cumulativeProbabilityText = ax.text(0.02, 0.90, "", transform=ax.transAxes)
     energyText = ax.text(0.02, 0.85, "", transform=ax.transAxes)
 
-    if theoreticalPsi is not None:
+    if arguments.theoretical:
         similarityText = ax.text(0.02, 0.80, "", transform=ax.transAxes)
 
     def update(iteration):

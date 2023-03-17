@@ -81,36 +81,33 @@ def run(
 
     psi = simulate(x, t, jittedWaveFunction, jittedV, args, constants, CNModule, percentDict)
 
-    psiTeo = None
+    psiTeo = jnp.zeros_like(psi)
+    for j in range(0, constants["tCount"]):
+        psiTeo = psiTeo.at[j].set(jittedWaveFunction(x, t[j]))
+
+    log.info(f"Saving simulation to folder {args.output}")
+    if not os.path.exists(args.output):
+        os.mkdir(args.output)
+
+    jnp.save(os.path.join(args.output, "evolution.npy"), psi)
+
     if args.theoretical:
-        psiTeo = jnp.zeros_like(psi)
-        log.info("Computing theoretical wave function")
-        for j in range(0, constants["tCount"]):
-            psiTeo = psiTeo.at[j].set(jittedWaveFunction(x, t[j]))
+        jnp.save(os.path.join(args.output, "theoretical.npy"), psiTeo)
+    # Save the metadata:
+    with open(os.path.join(args.output, "metadata.json"), "w") as f:
+        json.dump(
+            {
+                "constants": toJSON(constants),
+                "potential": base64.b64encode(marshal.dumps(V.__code__)).decode("utf-8"),
+                "wave_function": base64.b64encode(marshal.dumps(waveFunctionGenerator.__code__)).decode("utf-8"),
+                "simulator": CNModule.__name__,
+            },
+            f,
+            indent=4,
+        )
 
-    if not args.output:
+    if args.animate:
         animate(x, t, psi, jittedV, args, constants, computeEnergy, computeIntegral, psiTeo)
-    else:
-        log.info(f"Saving simulation to folder {args.output}")
-        if not os.path.exists(args.output):
-            os.mkdir(args.output)
-
-        jnp.save(os.path.join(args.output, "evolution.npy"), psi)
-
-        if args.theoretical:
-            jnp.save(os.path.join(args.output, "theoretical.npy"), psiTeo)
-        # Save the metadata:
-        with open(os.path.join(args.output, "metadata.json"), "w") as f:
-            json.dump(
-                {
-                    "constants": toJSON(constants),
-                    "potential": base64.b64encode(marshal.dumps(V.__code__)).decode("utf-8"),
-                    "wave_function": base64.b64encode(marshal.dumps(waveFunctionGenerator.__code__)).decode("utf-8"),
-                    "simulator": CNModule.__name__,
-                },
-                f,
-                indent=4,
-            )
 
 
 def getSimulatorModule(CNModPath: str = None):

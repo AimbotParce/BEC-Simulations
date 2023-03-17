@@ -28,8 +28,15 @@ def setupParser(parseArgs=True):
         "--output",
         help="Output folder for the simulation",
         type=str,
-        required=False,
-        default=None,
+        required=True,
+    )
+
+    parser.add_argument(
+        "-a",
+        "--animate",
+        help="Show the animation of the simulation",
+        action="store_true",
+        dest="animate",
     )
 
     parser.add_argument(
