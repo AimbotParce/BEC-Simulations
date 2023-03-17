@@ -13,11 +13,8 @@ This program is being used to simulate Bose-Einstein Condensate solutions such a
 
 ## Installation
 
-To install the program, one must first clone the repository:
-
-```bash
-git clone https://github.com/AimbotParce/BEC-Simulations
-```
+To install the program, one must first download the latest release from [github's latest release](https://github.com/AimbotParce/BEC-Simulations/releases/latest).
+Unzip the **source code** on a file of your choice.
   
 Then, one must install the dependencies:
   
@@ -49,6 +46,6 @@ To create a new simulation, one can just make a new **.py** file anywhere, onto 
 One can then run the simulation by executing the following command:
 
 ```bash
-python3 BEC-simulations -i <path> [-v <LEVEL>] [-o <path>] [-cn <path>] [-sp] [-inan] [-oc <const=value>]
+python3 BEC-simulations-X.X.X -i <path> [-v <LEVEL>] [-o <path>] [-cn <path>] [-sp] [-inan] [-oc <const=value>]
 ```
-Where `-v/--verbose` sets the verbosity level, `-o/--output` sets the path to an output folder onto which the program will save the computed wave functions and metadata, `-cn/--crank-nicolson` sets the path to a `.py` file containing the functions to compute left and right-hand matrices for the Crank-Nicolson method, `-sp/--show-parts` shows the real and imaginary parts on the otput animation, `-inan/--ignore-nan` ignores the error for NaN encountered and `-oc/--override-constants` allows the user to change the value for a global constant by providing it in the form of `constName=value`. Note that **BEC-simulations** is the name of the folder, and is not a `.py` file, however it has a `__main__.py` file, which is the one that is executed when the command is run.
+Where `X.X.X` is your version of the program, `-v/--verbose` sets the verbosity level, `-o/--output` sets the path to an output folder onto which the program will save the computed wave functions and metadata, `-cn/--crank-nicolson` sets the path to a `.py` file containing the functions to compute left and right-hand matrices for the Crank-Nicolson method, `-sp/--show-parts` shows the real and imaginary parts on the otput animation, `-inan/--ignore-nan` ignores the error for NaN encountered and `-oc/--override-constants` allows the user to change the value for a global constant by providing it in the form of `constName=value`. Note that **BEC-simulations** is the name of the folder, and is not a `.py` file, however it has a `__main__.py` file, which is the one that is executed when the command is run.
