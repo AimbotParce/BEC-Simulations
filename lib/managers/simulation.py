@@ -49,9 +49,9 @@ def simulate(
     disableTQDM = not log.isEnabledFor(logging.INFO)
     psi = jnp.zeros((len(t), len(x)), dtype=jnp.complex128)
 
-    log.info("Crank-Nicolson method for the time evolution of the Gross-Pitaevskii equation")
-    log.info("The Crank-Nicolson method solves the equation Ax(t+dt) = Bx(t)")
-    log.info("A and B can be computed at each time step")
+    # log.info("Crank-Nicolson method for the time evolution of the Gross-Pitaevskii equation")
+    # log.info("The Crank-Nicolson method solves the equation Ax(t+dt) = Bx(t)")
+    # log.info("A and B can be computed at each time step")
 
     log.info("Precomputing the potential over time...")
 
