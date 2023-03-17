@@ -7,9 +7,7 @@ import logging
 import os
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-from interface.logging import setupLog
+from lib.interface.logging import setupLog
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
