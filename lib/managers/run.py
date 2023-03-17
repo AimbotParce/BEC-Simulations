@@ -15,7 +15,7 @@ from .. import constants
 from ..interface.arguments import setupParser
 from ..interface.logging import setupLog
 from ..managers.animation import animate
-from ..managers.crankNicolson import default as CNdefault
+from ..managers.crankNicolson import dimensionless as CNdefault
 from ..managers.integrals import computeEnergy, computeIntegral
 from ..managers.simulation import simulate
 from ..utils.metadata import toJSON
