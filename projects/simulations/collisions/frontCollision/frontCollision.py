@@ -1,7 +1,7 @@
 import jax.numpy as jnp
 
 
-def waveFunction(x, t):
+def waveFunction(x, t, constants):
     eta = 1
 
     kappa1 = 1
@@ -20,5 +20,5 @@ def waveFunction(x, t):
     return wf1 + wf2
 
 
-def V(x, t):
+def V(x, t, constants):
     return jnp.zeros_like(x)

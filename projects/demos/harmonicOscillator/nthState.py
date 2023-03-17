@@ -10,11 +10,11 @@ n = int(input("Enter a value for n: "))
 w = 1
 
 
-def V(x, t):
+def V(x, t, constants):
     return 1 / 2 * constants.mass * w**2 * x**2
 
 
-def waveFunction(x, t):
+def waveFunction(x, t, constants):
     const = 1 / jnp.sqrt(2**n * factorial(n)) * (constants.mass * w / (constants.hbar * jnp.pi)) ** (1 / 4)
     exponential = jnp.exp(-constants.mass * w * x**2 / (2 * constants.hbar))
     hermite = hermval(x * jnp.sqrt(constants.mass * w / constants.hbar), [0] * n + [1])

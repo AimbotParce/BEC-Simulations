@@ -56,7 +56,7 @@ def animate(
     ax.set_title("Simulation of the Gross-Pitaevskii equation")
 
     # Lines
-    (potential,) = ax.plot(x, V(x, 0), color="red", label="V(x)")
+    (potential,) = ax.plot(x, V(x, 0, constants), color="red", label="V(x)")
     (probability,) = ax.plot(x, jnp.abs(psi[0]) ** 2, label="Probability")
 
     if args.showParts:
@@ -91,7 +91,7 @@ def animate(
                 x,
                 time,
                 psi[iteration],
-                V(x, time),
+                V(x, time, constants),
                 constants["dx"],
                 constants["g"],
                 constants["mass"],
@@ -108,7 +108,7 @@ def animate(
             similarityText.set_text("Similarity = %.8f" % similarity)
 
         # Update lines
-        potential.set_ydata(V(x, time))
+        potential.set_ydata(V(x, time, constants))
         probability.set_ydata(jnp.abs(psi[iteration]) ** 2)
         if args.showParts:
             realPart.set_ydata(jnp.real(psi[iteration]))

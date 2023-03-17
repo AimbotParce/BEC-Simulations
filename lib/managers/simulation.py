@@ -57,7 +57,7 @@ def simulate(
 
     potential = jnp.zeros((len(t), len(x)), dtype=jnp.float64)
     for iteration in tqdm(range(0, len(t)), desc="Potential", disable=disableTQDM):
-        potential = potential.at[iteration].set(V(x, t[iteration]))
+        potential = potential.at[iteration].set(V(x, t[iteration], constants))
     log.info("Running the simulation...")
 
     # Preallocate A
@@ -67,7 +67,7 @@ def simulate(
         (psi.nbytes + x.nbytes + t.nbytes + A.nbytes * 2 + potential.nbytes) / 1024 / 1024,
     )  #                                              ^ Take into account B
 
-    psi = psi.at[0].set(waveFunctionGenerator(x, 0))
+    psi = psi.at[0].set(waveFunctionGenerator(x, 0, constants))
     # psi = psi.at[0, 0].set(0)  # Set the first element to 0 to avoid NaNs
     # psi = psi.at[0, -1].set(0)  # Set the last element to 0 to avoid NaNs
     # This doesn't do anything.

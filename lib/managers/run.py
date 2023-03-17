@@ -42,7 +42,7 @@ def loadWaveFunctionAndPotential(path):
     waveFunctionGenerator = module.waveFunction
     # Check if function has the right signature
     signature = list(inspect.signature(waveFunctionGenerator).parameters.keys())
-    if not signature == ["x", "t"]:
+    if not signature == ["x", "t", "constants"]:
         raise AttributeError(
             f"waveFunction must have the signature waveFunction(x, t), but has waveFunction({', '.join(signature)})"
         )
@@ -54,7 +54,7 @@ def loadWaveFunctionAndPotential(path):
     V = module.V
     # Check if function has the right signature
     signature = list(inspect.signature(V).parameters.keys())
-    if not signature == ["x", "t"]:
+    if not signature == ["x", "t", "constants"]:
         raise AttributeError(f"V must have the signature V(x, t), but has V({', '.join(signature)})")
 
     return waveFunctionGenerator, V
@@ -83,7 +83,7 @@ def run(
 
     psiTeo = jnp.zeros_like(psi)
     for j in range(0, constants["tCount"]):
-        psiTeo = psiTeo.at[j].set(jittedWaveFunction(x, t[j]))
+        psiTeo = psiTeo.at[j].set(jittedWaveFunction(x, t[j], constants))
 
     log.info(f"Saving simulation to folder {args.output}")
     if not os.path.exists(args.output):
