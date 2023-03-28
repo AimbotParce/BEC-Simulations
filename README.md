@@ -39,7 +39,7 @@ One can check if JAX-GPU is working by checking the output of `jax.devices()`.
 
 ## Getting Started
 
-To create a new simulation, one can just make a new **.py** file anywhere, onto which one must add two functions: `waveFunction(x,t) -> jax.numpy.ndarray`, which takes `x : jax.numpy.ndarray` and `t : float` as the space grid (in meters) and the time (in seconds), as well as `constants:dict` as a dictionary containing the constants for the simulation, and returns the complex wave function evaluated over all the position lattice x at time t; and `V(x, t) -> jax.numpy.ndarray`, which also takes `x`, `t` and `constants` and shall return the real function for the potential evaluated over all x and at time t.
+To create a new simulation, one can just make a new **.py** file anywhere, onto which one must add two functions: `waveFunction(x, t, constants) -> jax.numpy.ndarray`, which takes `x : jax.numpy.ndarray` and `t : float` as the space grid (in meters) and the time (in seconds), as well as `constants:dict` as a dictionary containing the constants for the simulation, and returns the complex wave function evaluated over all the position lattice x at time t; and `V(x, t, constants) -> jax.numpy.ndarray`, which also takes `x`, `t` and `constants` and shall return the real function for the potential evaluated over all x and at time t.
 
 ## Usage
 
