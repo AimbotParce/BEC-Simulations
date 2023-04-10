@@ -67,9 +67,10 @@ def run(
     percentDict: dict = {},
 ):
     # If args.cpuOnly is True, then we will not use the GPU
+    backend = "gpu"
     if args.cpuOnly:
-        # log.info("Using CPU only")
-        log.warning("CPU only mode is not supported yet and will not work. Falling back to GPU mode.")
+        backend = "cpu"
+        log.warning("Using CPU only mode.")
         jax.config.update("jax_platform_name", "cpu")
 
     # Load the wave function and potential function
@@ -81,11 +82,11 @@ def run(
     t = jnp.arange(constants["tMin"], constants["tMax"], constants["dt"])
 
     log.info("Compiling functions")
-    jittedWaveFunction = jax.jit(waveFunctionGenerator)
-    jittedV = jax.jit(V)
+    jittedWaveFunction = jax.jit(waveFunctionGenerator, backend=backend)
+    jittedV = jax.jit(V, backend=backend)
     log.info("Done")
 
-    psi = simulate(x, t, jittedWaveFunction, jittedV, args, constants, CNModule, percentDict)
+    psi = simulate(x, t, jittedWaveFunction, jittedV, args, constants, CNModule, percentDict, backend=backend)
 
     psiTeo = jnp.zeros_like(psi)
     for j in range(0, constants["tCount"]):

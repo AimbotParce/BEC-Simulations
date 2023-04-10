@@ -3,6 +3,7 @@ from argparse import Namespace
 from types import ModuleType
 from typing import Callable, Union
 
+import jax
 import jax.numpy as jnp
 from tqdm import tqdm
 
@@ -18,6 +19,7 @@ def simulate(
     constants: dict,
     crankNicolson: ModuleType,
     percentDict: dict = {},
+    backend: str = "gpu",
 ) -> jnp.ndarray:
     """
     Simulate the time evolution of the Gross-Pitaevskii equation using the Crank-Nicolson method.
@@ -72,10 +74,13 @@ def simulate(
     # psi = psi.at[0, -1].set(0)  # Set the last element to 0 to avoid NaNs
     # This doesn't do anything.
 
+    computeLeft = jax.jit(crankNicolson.computeLeft, backend=backend)
+    computeRight = jax.jit(crankNicolson.computeRight, backend=backend)
+
     for iteration in tqdm(range(0, constants["tCount"]), desc="Simulation", disable=disableTQDM):
         percentDict["percent"] = iteration / constants["tCount"] * 100
         time = t[iteration]
-        A = crankNicolson.computeLeft(
+        A = computeLeft(
             x,
             psi[iteration],  # psi
             potential[iteration + 1],
@@ -86,7 +91,7 @@ def simulate(
             constants["g"],
         )
 
-        B = crankNicolson.computeRight(
+        B = computeRight(
             x,
             psi[iteration],
             potential[iteration],

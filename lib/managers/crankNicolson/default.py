@@ -2,7 +2,6 @@ import jax
 import jax.numpy as jnp
 
 
-@jax.jit
 def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     """
     Computes the right hand side of the Crank-Nicolson equation.
@@ -54,7 +53,6 @@ def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     return result
 
 
-@jax.jit
 def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     """
     Computes the left hand side of the Crank-Nicolson equation.
