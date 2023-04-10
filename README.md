@@ -29,7 +29,7 @@ You can find detailed instructions on how to install JAX on JAX's [installation 
 Here's what I did to install JAX on my machine:
 
 1. Install [nvidia drivers](https://www.nvidia.com/Download/index.aspx?lang=en-us) with `sudo apt install nvidia-driver-XXX`, version `525.105.17` in my case.
-2. Install [CUDA](https://developer.nvidia.com/cuda-downloads) and [cuDNN](https://developer.nvidia.com/cudnn), versions `12.0` and `8.8.1` in my case.
+2. Install [CUDA](https://developer.nvidia.com/cuda-downloads) and [cuDNN](https://developer.nvidia.com/cudnn), versions `12.0` and `8.8.1.3` in my case.
 
 I recommend checking the [compatibility matrix](https://docs.nvidia.com/deeplearning/cudnn/support-matrix/index.html) to make sure you're installing the correct versions.
 
