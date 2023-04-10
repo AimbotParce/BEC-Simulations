@@ -8,6 +8,7 @@ from lib.managers.run import getSimulatorModule, run
 args = setupParser()
 setupLog(level=args.verbose)
 
+
 # Override constants (Do this after loading the wave function and potential function
 # because they might have overridden some constants themselves)
 constants.overrideConstants(args)

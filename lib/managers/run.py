@@ -66,6 +66,12 @@ def run(
     CNModule=CNdefault,
     percentDict: dict = {},
 ):
+    # If args.cpuOnly is True, then we will not use the GPU
+    if args.cpuOnly:
+        # log.info("Using CPU only")
+        log.warning("CPU only mode is not supported yet and will not work. Falling back to GPU mode.")
+        jax.config.update("jax_platform_name", "cpu")
+
     # Load the wave function and potential function
     path = os.path.abspath(args.input)
     waveFunctionGenerator, V = loadWaveFunctionAndPotential(path)

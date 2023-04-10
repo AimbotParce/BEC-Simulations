@@ -82,6 +82,14 @@ def setupParser(parseArgs=True):
         dest="overrideConstants",
     )
 
+    parser.add_argument(
+        "-cpu",
+        "--cpu-only",
+        help="Run the simulation only on the CPU",
+        action="store_true",
+        dest="cpuOnly",
+    )
+
     if parseArgs:
         return parser.parse_args()
     else:
