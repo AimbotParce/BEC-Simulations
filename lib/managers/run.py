@@ -67,11 +67,12 @@ def run(
     percentDict: dict = {},
 ):
     # If args.cpuOnly is True, then we will not use the GPU
-    backend = "gpu"
-    if args.cpuOnly:
+    if args.cpuOnly or jax.lib.xla_bridge.get_backend().platform == "cpu":
         backend = "cpu"
         log.warning("Using CPU only mode.")
         jax.config.update("jax_platform_name", "cpu")
+    else:
+        backend = "gpu"
 
     # Load the wave function and potential function
     path = os.path.abspath(args.input)
