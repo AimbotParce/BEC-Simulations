@@ -3,138 +3,108 @@ import inspect
 import json
 import logging as log
 import sys
+from dataclasses import dataclass
 
 import jax.numpy as jnp
-import pandas as pd
-from tabulate import tabulate
-
-# Constants
-g = -1
-baseDensity = 1
-chemicalPotential = jnp.abs(g) * baseDensity
-hbar = 1
-mass = 1
-velocity = 0
-x0 = 0
-healingLength = hbar / jnp.sqrt(2 * mass * chemicalPotential)
 
 
-# Space and time steps [m] and [s]
-dx = 0.2
-dt = 0.005
-r = dt / (dx**2)
+class Constants:
+    # Constants
+    g = -1
+    baseDensity = 1
+    hbar = 1
+    mass = 1
+    velocity = 0
 
-# Space interval [m]
-xMin = -10
-xMax = 10
+    # Space and time steps [m] and [s]
+    x0 = 0
+    dx = 0.2
+    dt = 0.005
 
-# Time interval [s]
-tMin = 0
-tMax = 5
+    # Space interval [m]
+    xMin = -10
+    xMax = 10
 
-# Number of space and time steps
-xCount = int((xMax - xMin) / dx)
-tCount = int((tMax - tMin) / dt)
+    # Time interval [s]
+    tMin = 0
+    tMax = 5
 
+    # Plot constants
+    plotPause = 0.001
+    plotStep = 10
+    plotYMax = 2
+    plotYMin = -2
 
-# Plot constants
-plotPause = 0.001
-plotFPS = 1 / plotPause
-plotStep = 10
-plotYMax = 2
-plotYMin = -2
+    @property
+    def chemicalPotential(self):
+        return float(jnp.abs(self.g) * self.baseDensity)
 
+    @property
+    def healingLength(self):
+        return float(self.hbar / jnp.sqrt(2 * self.mass * self.chemicalPotential))
 
-def printConstants():
-    constantsTable = pd.DataFrame(
-        {
-            "g\n(g)": [g],
-            "Base Density\n(baseDensity)": [baseDensity],
-            "Chemical Potential\n(chemicalPotential)": [chemicalPotential],
-            "hbar\n(hbar)": [hbar],
-            "Mass\n(mass)": [mass],
-            "Healing Length\n(healingLength)": [healingLength],
-            "Velocity\n(velocity)": [velocity],
-            "Initial Position\n(x0)": [x0],
-        }
-    )
+    @property
+    def r(self):
+        return self.dt / (self.dx**2)
 
-    log.info("Constants:\n%s", tabulate(constantsTable, headers="keys", tablefmt="psql", showindex=False))
+    @property
+    def xCount(self):
+        return int((self.xMax - self.xMin) / self.dx)
 
+    @property
+    def tCount(self):
+        return int((self.tMax - self.tMin) / self.dt)
 
-def printSimulationParams():
-    parameterTable = pd.DataFrame(
-        {
-            "X Step\n(dx)": [dx],
-            "X Interval\n(xMax-xMin)": [xMax - xMin],
-            "X Points\n(xCount)": [xCount],
-            "T Step\n(dt)": [dt],
-            "T Interval\n(tMax-tMin)": [tMax - tMin],
-            "T Points\n(tCount)": [tCount],
-        }
-    )
+    @property
+    def plotFPS(self):
+        return 1 / self.plotPause
 
-    log.info("Simulation parameters:\n%s", tabulate(parameterTable, headers="keys", tablefmt="psql", showindex=False))
-
-
-def printAnimationParams():
-    parameterTable = pd.DataFrame(
-        {
-            "Pause\n(plotPause)": [plotPause],
-            "FPS\n(plotFPS)": [plotFPS],
-            "Step\n(plotStep)": [plotStep],
-            "Y Max\n(plotYMax)": [plotYMax],
-            "Y Min\n(plotYMin)": [plotYMin],
-        }
-    )
-
-    log.info("Animation parameters:\n%s", tabulate(parameterTable, headers="keys", tablefmt="psql", showindex=False))
-
-
-def overrideConstants(args):
-    """
-    Override the constants with the ones specified in the command line arguments
-    """
-    existingConstants = {
-        name: getattr(sys.modules[__name__], name) for name in dir(sys.modules[__name__]) if not name.startswith("_")
-    }
-
-    if args.overrideConstants:
-        for constant in args.overrideConstants:
-            if "=" not in constant:
-                log.error(f"Invalid constant override {constant}")
+    def toJSON(self):
+        for k in dir(self):
+            if k.startswith("_") or k == "toJSON":
                 continue
+        return {name: getattr(self, name) for name in dir(self) if isEligibleConstant(name, getattr(self, name))}
 
-            name, value = constant.split("=")
-            if not name in existingConstants:
-                log.error(f"Invalid constant override {constant}")
-                continue
+    def __str__(self):
+        out = {key: value if isJSONSerializable(value) else str(value) for key, value in self.toJSON().items()}
+        return json.dumps(out, indent=4)
 
-            try:
-                value = type(existingConstants[name])(value)
-            except ValueError:
-                log.error(f"Invalid constant override {constant}")
-                continue
+    def override(self, JSON):
+        for key in JSON:
+            if hasattr(self, key):
+                try:
+                    t = type(getattr(self, key))
+                    setattr(self, key, t(JSON[key]))
+                    log.info(f"Overriding constant {key} with value {JSON[key]} as type {t}")
+                except:
+                    log.warning("Could not override constant %s with correct type. Saving it raw.", key)
+                    setattr(self, key, JSON[key])
+            else:
+                log.info("New constant %s with value %s", key, JSON[key])
+                setattr(self, key, JSON[key])
 
-            setattr(sys.modules[__name__], name, value)
+    def print(self, logger=print):
+        if logger == print:
+            logger(str(self))
+        else:
+            textLines = str(self).splitlines()
+            for line in textLines:
+                logger(line)
 
-            log.info(f"Overriding constant {name} with value {value}")
+    def __getitem__(self, key):
+        return getattr(self, key)
 
-    # Recalculate derived constants
-    global chemicalPotential, healingLength, xCount, tCount, r, plotFPS
-    chemicalPotential = jnp.abs(g) * baseDensity
-    healingLength = hbar / jnp.sqrt(2 * mass * chemicalPotential)
-    xCount = int((xMax - xMin) / dx)
-    tCount = int((tMax - tMin) / dt)
-    r = dt / (dx**2)
-    plotFPS = 1 / plotPause
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
 
 
-def toDict():
-    return {
-        name: getattr(sys.modules[__name__], name)
-        for name in dir(sys.modules[__name__])
-        if not name.startswith("_")
-        and not inspect.ismodule(getattr(sys.modules[__name__], name))
-        and not inspect.isfunction(getattr(sys.modules[__name__], name))
-    }
+def isEligibleConstant(key, obj):
+    return not (inspect.isfunction(obj) or inspect.ismodule(obj) or inspect.ismethod(obj)) and not key.startswith("_")
+
+
+def isJSONSerializable(obj):
+    try:
+        json.dumps(obj)
+        return True
+    except:
+        return False

@@ -1,6 +1,7 @@
+
 import os
 
-from lib import constants
+from lib.constants import Constants
 from lib.interface.arguments import setupParser
 from lib.interface.logging import setupLog
 from lib.managers.run import getSimulatorModule, run
@@ -11,12 +12,10 @@ setupLog(level=args.verbose)
 
 # Override constants (Do this after loading the wave function and potential function
 # because they might have overridden some constants themselves)
-constants.overrideConstants(args)
+constants = Constants()
+constants.override(args.overrideConstants if args.overrideConstants else {})
 
-constants.printConstants()
-constants.printSimulationParams()
-constants.printAnimationParams()
 
 CNModule = getSimulatorModule(os.path.abspath(args.CNmodule) if args.CNmodule else None)
 
-run(args, constants.toDict(), CNModule)
+run(args, constants, CNModule)

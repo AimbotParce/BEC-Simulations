@@ -91,6 +91,16 @@ def setupParser(parseArgs=True):
     )
 
     if parseArgs:
-        return parser.parse_args()
+        args = parser.parse_args()
+
+        if args.overrideConstants:
+            res = {}
+            for constant in args.overrideConstants:
+                if "=" not in constant:
+                    raise ValueError(f"Invalid constant override {constant}. Missing '='")
+                key, value = constant.split("=")
+                res[key] = value  # These are strings!!!
+            args.overrideConstants = res
+        return args
     else:
         return parser

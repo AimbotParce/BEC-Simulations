@@ -11,7 +11,7 @@ from typing import Union
 import jax
 import jax.numpy as jnp
 
-from .. import constants
+from ..constants import Constants, isEligibleConstant
 from ..interface.arguments import setupParser
 from ..interface.logging import setupLog
 from ..managers.animation import animate
@@ -25,44 +25,58 @@ jax.config.update("jax_enable_x64", True)
 log = logging.getLogger("BECsimulations")
 
 
-def loadWaveFunctionAndPotential(path):
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"File {path} not found")
+class SimulationLoader:
+    def __init__(self, path):
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"File {path} not found")
+        if not path.endswith(".py"):
+            raise ValueError(f"File {path} must be a Python file")
+        self.path = path
 
-    if not path.endswith(".py"):
-        raise ValueError(f"File {path} must be a Python file")
+        log.info(f"Loading wave function and potential function from {path}")
 
-    log.info(f"Loading wave function and potential function from {path}")
+        self.module = SourceFileLoader("module", path).load_module()
+        self.waveFunctionGenerator = self.loadWaveFunction()
+        self.V = self.loadV()
 
-    module = SourceFileLoader("module", path).load_module()
-    if not hasattr(module, "waveFunction"):
-        raise AttributeError(f"File {path} must have a waveFunction function")
-    if not inspect.isfunction(module.waveFunction):
-        raise AttributeError(f"waveFunction must be a function")
-    waveFunctionGenerator = module.waveFunction
-    # Check if function has the right signature
-    signature = list(inspect.signature(waveFunctionGenerator).parameters.keys())
-    if not signature == ["x", "t", "constants"]:
-        raise AttributeError(
-            f"waveFunction must have the signature waveFunction(x, t), but has waveFunction({', '.join(signature)})"
-        )
+        log.info(f"Identifying constant overrides on file {path}")
+        self.overriddenConstants = self.loadOverriddenConstants()
 
-    if not hasattr(module, "V"):
-        raise AttributeError(f"File {path} must have a potential function (V)")
-    if not inspect.isfunction(module.V):
-        raise AttributeError(f"V must be a function")
-    V = module.V
-    # Check if function has the right signature
-    signature = list(inspect.signature(V).parameters.keys())
-    if not signature == ["x", "t", "constants"]:
-        raise AttributeError(f"V must have the signature V(x, t), but has V({', '.join(signature)})")
+    def loadWaveFunction(self):
+        if not hasattr(self.module, "waveFunction"):
+            raise AttributeError(f"File {self.path} must have a waveFunction function")
+        if not inspect.isfunction(self.module.waveFunction):
+            raise AttributeError(f"waveFunction must be a function")
 
-    return waveFunctionGenerator, V
+        # Check if function has the right signature
+        signature = list(inspect.signature(self.module.waveFunction).parameters.keys())
+        if not signature == ["x", "t", "constants"]:
+            raise AttributeError(
+                f"waveFunction must have the signature waveFunction(x, t), but has waveFunction({', '.join(signature)})"
+            )
+
+        return self.module.waveFunction
+
+    def loadV(self):
+        if not hasattr(self.module, "V"):
+            raise AttributeError(f"File {self.path} must have a potential function (V)")
+        if not inspect.isfunction(self.module.V):
+            raise AttributeError(f"V must be a function")
+        # Check if function has the right signature
+        signature = list(inspect.signature(self.module.V).parameters.keys())
+        if not signature == ["x", "t", "constants"]:
+            raise AttributeError(f"V must have the signature V(x, t), but has V({', '.join(signature)})")
+        return self.module.V
+
+    def loadOverriddenConstants(self):
+        """Any variable in the file that is not a function or module will be considered a constant"""
+
+        return {key: value for key, value in self.module.__dict__.items() if isEligibleConstant(key, value)}
 
 
 def run(
     args: Union[Namespace, dict],
-    constants: dict,
+    constants: Constants,
     CNModule=CNdefault,
     percentDict: dict = {},
 ):
@@ -76,7 +90,14 @@ def run(
 
     # Load the wave function and potential function
     path = os.path.abspath(args.input)
-    waveFunctionGenerator, V = loadWaveFunctionAndPotential(path)
+    loader = SimulationLoader(path)
+    waveFunctionGenerator, V = loader.waveFunctionGenerator, loader.V
+
+    # Override constants from the file
+    constants.override(loader.overriddenConstants)
+    log.info("Using the following constants:")
+    constants.print(logger=log.info)
+    constants = constants.toJSON()
 
     # Setup the X and T arrays
     x = jnp.arange(constants["xMin"], constants["xMax"], constants["dx"])
