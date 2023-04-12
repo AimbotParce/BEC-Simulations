@@ -1,5 +1,6 @@
 import logging
 from argparse import Namespace
+from functools import partial
 from types import ModuleType
 from typing import Callable, Union
 
@@ -77,9 +78,17 @@ def simulate(
     computeLeft = jax.jit(crankNicolson.computeLeft, backend=backend)
     computeRight = jax.jit(crankNicolson.computeRight, backend=backend)
 
-    for iteration in tqdm(range(0, constants["tCount"]), desc="Simulation", disable=disableTQDM):
+    mainLoopJitted = jax.jit(mainLoop, backend=backend, static_argnums=(0, 1, 2))
+    psi = mainLoopJitted(computeLeft, computeRight, constants["tCount"], psi, x, t, potential, constants, percentDict)
+
+    log.info("Simulation finished.")
+
+    return psi
+
+
+def mainLoop(computeLeft, computeRight, tCount, psi, x, t, potential, constants, percentDict):
+    for iteration in range(0, tCount):
         percentDict["percent"] = iteration / constants["tCount"] * 100
-        time = t[iteration]
         A = computeLeft(
             x,
             psi[iteration],  # psi
@@ -103,7 +112,4 @@ def simulate(
         )
         right = B @ psi[iteration]
         psi = psi.at[iteration + 1].set(jnp.linalg.solve(A, right))
-
-    log.info("Simulation finished.")
-
     return psi
