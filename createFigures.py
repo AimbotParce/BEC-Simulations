@@ -1,15 +1,23 @@
 # %%
 import json
 import os
+import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
 
+fpath = os.path.join(os.path.dirname(__file__), "projects", "simulations", "invertedHarmonic", "fixedOnTopUnbreaking")
+
+
+def path(*args):
+    return os.path.join(fpath, *args)
+
+
 # Load the solution
-psi = np.load("evolution.npy")[:400]
+psi = np.load(path("evolution.npy"))
 
 # %%
-with open("metadata.json", "r") as f:
+with open(path("metadata.json"), "r") as f:
     metadata = json.load(f)
 constants = metadata["constants"]
 
@@ -20,8 +28,6 @@ I = np.arange(psi.shape[1])
 J = np.arange(psi.shape[0])
 T = np.linspace(constants["tMin"], constants["tMax"], psi.shape[0])
 X = np.linspace(constants["xMin"], constants["xMax"], psi.shape[1])
-
-imgFolder = "report_images"
 
 # %%
 
@@ -51,3 +57,12 @@ plt.title("Evolution of the wave function")
 plt.colorbar()
 
 # %%
+fig, ax = plt.subplots(1, 3, figsize=(15, 5), sharey=True, sharex=True)
+
+
+for plot, j in enumerate([0, 250, 500]):
+    # Plot the evolution
+    ax[plot].plot(X, np.abs(psi[j]) ** 2)
+    ax[plot].set_xlabel("Position/$a_0$")
+    ax[plot].set_ylabel(r"Probability Density ($|\tilde{\psi}|^2$)")
+    ax[plot].set_title("$\\frac{{t}}{\\tau}=%.2f$" % (T[j]))
