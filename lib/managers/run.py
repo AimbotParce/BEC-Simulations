@@ -39,7 +39,7 @@ class SimulationLoader:
         self.waveFunctionGenerator = self.loadWaveFunction()
         self.V = self.loadV()
 
-        log.info(f"Identifying constant overrides on file {path}")
+        log.info(f"Identifying constant overrides on simulation file")
         self.overriddenConstants = self.loadOverriddenConstants()
 
     def loadWaveFunction(self):

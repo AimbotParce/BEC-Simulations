@@ -65,13 +65,13 @@ def setupParser(parseArgs=True):
         dest="theoretical",
     )
 
-    parser.add_argument(
-        "-inan",
-        "--ignore-nan",
-        help="Ignore NaN values in the simulation",
-        action="store_true",
-        dest="ignoreNan",
-    )
+    # parser.add_argument(
+    #     "-inan",
+    #     "--ignore-nan",
+    #     help="Ignore NaN values in the simulation",
+    #     action="store_true",
+    #     dest="ignoreNan",
+    # )
 
     parser.add_argument(
         "-oc",
