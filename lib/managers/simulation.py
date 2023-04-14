@@ -75,11 +75,14 @@ def simulate(
     # psi = psi.at[0, -1].set(0)  # Set the last element to 0 to avoid NaNs
     # This doesn't do anything.
 
+    # Psi must be loaded on the GPU
+    psi = jax.device_put(psi)
+
     computeLeft = jax.jit(crankNicolson.computeLeft, backend=backend)
     computeRight = jax.jit(crankNicolson.computeRight, backend=backend)
 
-    mainLoopJitted = jax.jit(mainLoop, backend=backend, static_argnums=(0, 1, 2))
-    psi = mainLoopJitted(computeLeft, computeRight, constants["tCount"], psi, x, t, potential, constants, percentDict)
+    # mainLoopJitted = jax.jit(mainLoop, backend=backend, static_argnums=(0, 1, 2))
+    psi = mainLoop(computeLeft, computeRight, constants["tCount"], psi, x, t, potential, constants, percentDict)
 
     log.info("Simulation finished.")
 
@@ -87,7 +90,7 @@ def simulate(
 
 
 def mainLoop(computeLeft, computeRight, tCount, psi, x, t, potential, constants, percentDict):
-    for iteration in range(0, tCount):
+    for iteration in tqdm(range(0, tCount), desc="Simulation", disable=not log.isEnabledFor(logging.INFO)):
         percentDict["percent"] = iteration / constants["tCount"] * 100
         A = computeLeft(
             x,
