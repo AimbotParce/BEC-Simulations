@@ -3,10 +3,8 @@ Theoretical wave functions and initial conditions.
 """
 import jax.numpy as jnp
 
-from ..lib import constants
 
-
-def brightSolitonMalo(x, t=0):
+def brightSolitonMalo(x, t, constants):
     timeIndependent = (
         jnp.sqrt(constants.baseDensity)
         / jnp.cosh((x - constants.x0) / jnp.sqrt(2))
@@ -17,17 +15,30 @@ def brightSolitonMalo(x, t=0):
     return timeIndependent * timeDependency
 
 
-def brightSolitonWiki(x, t=0):
+def brightSolitonWiki(x, t, constants):
     timeIndependent = 1 / jnp.cosh(x - constants.x0)
     timeDependency = jnp.exp(-1j * constants.chemicalPotential * t)
     return timeIndependent * timeDependency
 
 
-def darkSolitonWiki(x, t=0):
+def darkSolitonWiki(x, t, constants):
     timeIndependent = jnp.tanh(x - constants.x0)
     timeDependency = 1
     return timeIndependent * timeDependency
 
 
-def randomGaussian(x, t=0):
+def randomGaussian(x, t, constants):
     return jnp.exp(-((x - constants.x0) ** 2) / 4 - 1j * constants.velocity * x) / (2 * jnp.pi) ** (1 / 4)
+
+
+def brightSoliton(x, t, constants):
+    v = constants["velocity"]
+    g = constants["g"]
+
+    eta = jnp.sqrt((v**2 + 2) / (-2 * g))
+    kappa = jnp.sqrt(2 / (v**2 + 2))
+
+    spacePart = eta / jnp.cosh((x - v * t) / kappa) * jnp.exp(1j * x * v)
+    timePart = jnp.exp(1j * (1 / 2 - v**2 / 4) * t)
+
+    return spacePart * timePart

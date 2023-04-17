@@ -10,14 +10,14 @@ import jax.numpy as jnp
 
 class Constants:
     # Constants
-    g = -1
-    baseDensity = 1
-    hbar = 1
-    mass = 1
-    velocity = 0
+    g = -1.0
+    baseDensity = 1.0
+    hbar = 1.0
+    mass = 1.0
+    velocity = 0.0
 
     # Space and time steps [m] and [s]
-    x0 = 0
+    x0 = 0.0
     dx = 0.2
     dt = 0.005
 
