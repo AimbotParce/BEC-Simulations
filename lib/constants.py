@@ -15,9 +15,9 @@ class Constants:
     hbar = 1.0
     mass = 1.0
     velocity = 0.0
+    x0 = 0.0
 
     # Space and time steps [m] and [s]
-    x0 = 0.0
     dx = 0.2
     dt = 0.005
 

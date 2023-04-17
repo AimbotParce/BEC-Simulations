@@ -34,11 +34,12 @@ def randomGaussian(x, t, constants):
 def brightSoliton(x, t, constants):
     v = constants["velocity"]
     g = constants["g"]
+    x0 = constants["x0"]
 
     eta = jnp.sqrt((v**2 + 2) / (-2 * g))
     kappa = jnp.sqrt(2 / (v**2 + 2))
 
-    spacePart = eta / jnp.cosh((x - v * t) / kappa) * jnp.exp(1j * x * v)
+    spacePart = eta / jnp.cosh(((x - x0) - v * t) / kappa) * jnp.exp(1j * (x - x0) * v)
     timePart = jnp.exp(1j * (1 / 2 - v**2 / 4) * t)
 
     return spacePart * timePart
