@@ -52,7 +52,7 @@ class SimulationLoader:
         signature = list(inspect.signature(self.module.waveFunction).parameters.keys())
         if not signature == ["x", "t", "constants"]:
             raise AttributeError(
-                f"waveFunction must have the signature waveFunction(x, t), but has waveFunction({', '.join(signature)})"
+                f"waveFunction must have the signature waveFunction(x, t, constants), but has waveFunction({', '.join(signature)})"
             )
 
         return self.module.waveFunction
@@ -65,7 +65,7 @@ class SimulationLoader:
         # Check if function has the right signature
         signature = list(inspect.signature(self.module.V).parameters.keys())
         if not signature == ["x", "t", "constants"]:
-            raise AttributeError(f"V must have the signature V(x, t), but has V({', '.join(signature)})")
+            raise AttributeError(f"V must have the signature V(x, t, constants), but has V({', '.join(signature)})")
         return self.module.V
 
     def loadOverriddenConstants(self):
