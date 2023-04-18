@@ -63,4 +63,7 @@ plt.ylim(T[-1], T[0])
 
 plt.title("Evolution of the wave function")
 plt.colorbar()
+plt.savefig(os.path.join(imgFolder, "evolutionExpected.png"))
+# %%
+
 # %%
