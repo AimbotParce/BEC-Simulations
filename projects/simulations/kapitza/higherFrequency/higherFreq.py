@@ -3,7 +3,7 @@ import jax.numpy as jnp
 
 from lib.waveFunctions import brightSoliton as waveFunction
 
-w0 = 2.0
+w0 = 5.0
 amplitude = 2.0
 
 
