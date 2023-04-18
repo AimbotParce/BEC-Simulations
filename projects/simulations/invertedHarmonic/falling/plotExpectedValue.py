@@ -66,4 +66,13 @@ plt.colorbar()
 plt.savefig(os.path.join(imgFolder, "evolutionExpected.png"))
 # %%
 
+difference = np.abs(expectedX - theoretical_X)
+
+plt.plot(T, difference)
+plt.xlabel("Time/$\\tau$")
+plt.ylabel("Difference/$a_0$")
+plt.title("Difference between the expected value and the theoretical one")
+plt.savefig(os.path.join(imgFolder, "difference.png"))
+
+
 # %%
