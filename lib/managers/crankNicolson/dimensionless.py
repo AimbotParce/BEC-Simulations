@@ -40,8 +40,8 @@ def computeRight(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     result = result.at[indices].set(others)
 
     # Periodic boundary conditions
-    result = result.at[(0, -1)].set(others)
-    result = result.at[(-1, 0)].set(others)
+    # result = result.at[(0, -1)].set(others)
+    # result = result.at[(-1, 0)].set(others)
 
     return result
 
@@ -84,7 +84,7 @@ def computeLeft(x, psi, potential, dx, dt, mass, hbar, interactionConstant):
     result = result.at[indices].set(others)
 
     # Periodic boundary conditions
-    result = result.at[(0, -1)].set(others)
-    result = result.at[(-1, 0)].set(others)
+    # result = result.at[(0, -1)].set(others)
+    # result = result.at[(-1, 0)].set(others)
 
     return result
