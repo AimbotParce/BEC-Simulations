@@ -80,8 +80,8 @@ class Constants:
                     log.warning("Could not override constant %s with correct type. Saving it raw.", key)
                     setattr(self, key, JSON[key])
             else:
-                log.info("New constant %s with value %s", key, JSON[key])
-                setattr(self, key, JSON[key])
+                log.info("New constant %s with value %s. Setting it as float by default.", key, JSON[key])
+                setattr(self, key, float(JSON[key]))
 
     def print(self, logger=print):
         if logger == print:
