@@ -51,6 +51,6 @@ for freq, idx in zip(freqs, idxs):
     # tTicksLabels = [f"{t:.2f}" for t in tTicks]
     # plt.yticks(J[:: int(len(J) / 10)], tTicksLabels)
 
-    ax[idx].set_title("$\\omega = $" + str(freq) + "$\\tau$")
+    ax[idx].set_title("$\\omega_V = $" + str(freq) + "$\\omega$")
 
 plt.savefig(os.path.join(os.path.dirname(__file__), "FrequencyDependency.png"))
