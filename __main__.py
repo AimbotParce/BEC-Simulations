@@ -1,4 +1,3 @@
-
 import os
 
 from lib.constants import Constants
@@ -13,8 +12,6 @@ setupLog(level=args.verbose)
 # Override constants (Do this after loading the wave function and potential function
 # because they might have overridden some constants themselves)
 constants = Constants()
-constants.override(args.overrideConstants if args.overrideConstants else {})
-
 
 CNModule = getSimulatorModule(os.path.abspath(args.CNmodule) if args.CNmodule else None)
 

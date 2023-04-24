@@ -95,6 +95,9 @@ def run(
 
     # Override constants from the file
     constants.override(loader.overriddenConstants)
+    # Override constants from the command line
+    constants.override(args.overrideConstants if args.overrideConstants else {})
+
     log.info("Using the following constants:")
     constants.print(logger=log.info)
     constants = constants.toJSON()
