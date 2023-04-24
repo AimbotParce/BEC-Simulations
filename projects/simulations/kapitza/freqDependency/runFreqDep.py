@@ -7,9 +7,9 @@ path = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 freqs = [1.0, 2.0, 3.0, 4.0, 5.0]
 
 # Change directory to the folder just above BEC-Simulations
-os.chdir(os.path.join(path, "..", "..", "..", "..", ".."))
 
 for freq in freqs:
+    os.chdir(os.path.join(path, "..", "..", "..", "..", ".."))
     # Create folder
     folder = os.path.join(path, "freq" + str(freq))
     if os.path.exists(folder):
@@ -31,7 +31,7 @@ for freq in freqs:
             "-o",
             folder,
             "--override-constants",
-            "amplitude=" + str(freq),
+            "w0=" + str(freq),
         ]
     )
 
