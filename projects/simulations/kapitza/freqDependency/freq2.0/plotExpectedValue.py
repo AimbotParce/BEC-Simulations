@@ -41,10 +41,10 @@ if not os.path.exists(imgFolder):
 
 expectedX = np.sum(np.abs(psi) ** 2 * X, axis=1) / np.sum(np.abs(psi) ** 2, axis=1)
 
-theoretical_X = -np.cosh(T) + 1
+# theoretical_X = -np.cosh(T) + 1
 
 plt.imshow(np.abs(psi), aspect="auto", extent=[X[0], X[-1], T[-1], T[0]])
-plt.plot(theoretical_X, T, color="red")
+# plt.plot(theoretical_X, T, color="red")
 plt.plot(expectedX, T, color="white")
 
 
@@ -69,13 +69,13 @@ plt.colorbar()
 plt.savefig(os.path.join(imgFolder, "evolutionExpected.png"))
 # %%
 
-difference = np.abs(expectedX - theoretical_X)
+# difference = np.abs(expectedX - theoretical_X)
 
-plt.plot(T, difference)
-plt.xlabel("Time/$\\tau$")
-plt.ylabel("Difference/$a_0$")
-plt.title("Difference between the expected value and the theoretical one")
-plt.savefig(os.path.join(imgFolder, "difference.png"))
+# plt.plot(T, difference)
+# plt.xlabel("Time/$\\tau$")
+# plt.ylabel("Difference/$a_0$")
+# plt.title("Difference between the expected value and the theoretical one")
+# plt.savefig(os.path.join(imgFolder, "difference.png"))
 
 
 # %%
