@@ -1,4 +1,3 @@
 # Ignore pycache directories
 __pycache__/
 *.pyc
-*.npy
