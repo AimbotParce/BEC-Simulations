@@ -1,0 +1,14 @@
+# CPU benchmark
+0.2	12.395511865615845	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.2 -cpu]
+0.1	13.39571738243103	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.1 -cpu]
+0.05	17.608800411224365	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.05 -cpu]
+0.01	206.85074663162231	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.01 -cpu]
+0.005	1036.185469865799	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.005 -cpu]
+
+# GPU benchmark
+0.2	13.417908430099487	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.2]
+0.1	16.161849975585938	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.1]
+0.05	23.543663501739502	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.05]
+0.01	219.76213121414185	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.01]
+0.005	1159.1468739509583	[-i BEC-Simulations/projects/benchmarks/freeBrightSoliton/freeBrightSoliton.py -o BEC-Simulations/projects/benchmarks/freeBrightSoliton/ -oc dx=0.005]
+

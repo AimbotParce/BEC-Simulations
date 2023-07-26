@@ -1,0 +1,33 @@
+{
+    "constants": {
+        "N": 1400,
+        "U0": -0.5,
+        "a0": 1.0,
+        "baseDensity": 1,
+        "dt": 0.003,
+        "dx": 0.1,
+        "hbar": 1.0,
+        "healingLength": 1.0,
+        "mass": 1.0,
+        "oscillationPeriod": 6.283185307179586,
+        "plotFPS": 1000.0,
+        "plotPause": 0.001,
+        "plotStep": 10,
+        "plotYMax": 2,
+        "plotYMin": -2,
+        "potentialW": 1.0,
+        "psi0": 1.0,
+        "r": 0.29999999999999993,
+        "tCount": 2094,
+        "tMax": 6.283185307179586,
+        "tMin": 0.0,
+        "velocity": 0.0,
+        "x0": 1.0,
+        "xCount": 417,
+        "xMax": 20.9,
+        "xMin": -20.9
+    },
+    "potential": "4wMAAAAAAAAAAAAAAAMAAAADAAAAQwAAAHMMAAAAZAF8AGQCEwAUAFMAKQNOZwAAAAAAAOA/6QIAAACpACkD2gF42gF02gljb25zdGFudHNyAgAAAHICAAAA+mUvaG9tZS9tcGFyY2VyaXNhL0Rlc2t0b3AvY29kZS9URkcvQkVDLVNpbXVsYXRpb25zL3Byb2plY3RzL29zY2lsbGF0aW5nU3R1ZHkvb3NjaWxsYXRpbmdfc2ltdWxhdGlvbi5wedoBVhYAAABzAgAAAAwB",
+    "wave_function": "4wMAAAAAAAAAAAAAAAYAAAAHAAAAQwAAAHM4AAAAfAJkARkAfQN8AmQCGQB9BHwCZAMZAH0FfAN0AKABfAB8BRgAdACgAmQEoQEbAHwEGwChARsAUwApBforRGlzcGxhY2VkIHRoZSBzb2xpdG9uIDAuMDEgYTAgdG8gdGhlIHJpZ2h0LtoEcHNpMNoNaGVhbGluZ0xlbmd0aNoCeDDpAgAAACkD2gNqbnDaBGNvc2jaBHNxcnQpBtoBeNoBdNoJY29uc3RhbnRzcgIAAADaAnhpcgQAAACpAHINAAAA+mUvaG9tZS9tcGFyY2VyaXNhL0Rlc2t0b3AvY29kZS9URkcvQkVDLVNpbXVsYXRpb25zL3Byb2plY3RzL29zY2lsbGF0aW5nU3R1ZHkvb3NjaWxsYXRpbmdfc2ltdWxhdGlvbi5wedoMd2F2ZUZ1bmN0aW9uDQAAAHMIAAAACAIIAQgBIAI=",
+    "simulator": "/home/mparcerisa/Desktop/code/TFG/BEC-Simulations/lib/managers/crankNicolson/dimensionless.py"
+}

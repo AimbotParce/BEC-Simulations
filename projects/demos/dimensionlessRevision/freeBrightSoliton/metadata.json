@@ -1,0 +1,29 @@
+{
+    "constants": {
+        "baseDensity": 1,
+        "chemicalPotential": 1,
+        "dt": 0.005,
+        "dx": 0.2,
+        "g": -1,
+        "hbar": 1,
+        "healingLength": 0.7071067811865475,
+        "mass": 1,
+        "plotFPS": 1000.0,
+        "plotPause": 0.001,
+        "plotStep": 10,
+        "plotYMax": 2,
+        "plotYMin": -2,
+        "r": 0.12499999999999997,
+        "tCount": 1000,
+        "tMax": 5,
+        "tMin": 0,
+        "velocity": 0,
+        "x0": 0,
+        "xCount": 100,
+        "xMax": 10,
+        "xMin": -10
+    },
+    "potential": "\u00e3\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0002\u0000\u0000\u0000\u0003\u0000\u0000\u0000C\u0000\u0000\u0000s\n\u0000\u0000\u0000t\u0000\u00a0\u0001|\u0000\u00a1\u0001S\u0000)\u0001N)\u0002\u00da\u0003jnp\u00da\nzeros_like\u00a9\u0002\u00da\u0001x\u00da\u0001t\u00a9\u0000r\u0006\u0000\u0000\u0000\u00fa\u00a0/mnt/c/Users/mirxm/OneDrive/Escritorio/Storage/Estudis/UB/8e Semestre/TFG/BEC-Soliton-Kapitza-Pendulum/projects/demos/dimensionlessRevision/freeBrightSoliton.py\u00da\u0001V\r\u0000\u0000\u0000s\u0002\u0000\u0000\u0000\u0000\u0001",
+    "wave_function": "\u00e3\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0002\u0000\u0000\u0000\u0007\u0000\u0000\u0000C\u0000\u0000\u0000s8\u0000\u0000\u0000t\u0000t\u0001\u00a0\u0002d\u0001t\u0003\u0014\u0000|\u0000\u0014\u0000d\u0001t\u0004\u0014\u0000|\u0001\u0014\u0000\u0018\u0000\u00a1\u0001\u0014\u0000t\u0001\u00a0\u0005t\u0000|\u0000t\u0006|\u0001\u0014\u0000\u0018\u0000\u0014\u0000\u00a1\u0001\u001b\u0000S\u0000)\u0002Ny\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u00f0?)\u0007\u00da\u0003eta\u00da\u0003jnp\u00da\u0003exp\u00da\u0005kappa\u00da\u0005omega\u00da\u0004cosh\u00da\u0001v\u00a9\u0002\u00da\u0001x\u00da\u0001t\u00a9\u0000r\u000b\u0000\u0000\u0000\u00fa\u00a0/mnt/c/Users/mirxm/OneDrive/Escritorio/Storage/Estudis/UB/8e Semestre/TFG/BEC-Soliton-Kapitza-Pendulum/projects/demos/dimensionlessRevision/freeBrightSoliton.py\u00da\fwaveFunction\t\u0000\u0000\u0000s\u0002\u0000\u0000\u0000\u0000\u0001",
+    "simulator": "lib.managers.crankNicolson.default"
+}

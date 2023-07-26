@@ -1,0 +1,29 @@
+{
+    "constants": {
+        "baseDensity": 1,
+        "chemicalPotential": 10,
+        "dt": 0.005,
+        "dx": 0.05,
+        "g": -10,
+        "hbar": 1,
+        "healingLength": 0.22360679774997896,
+        "mass": 1,
+        "plotFPS": 1000.0,
+        "plotPause": 0.001,
+        "plotStep": 10,
+        "plotYMax": 2,
+        "plotYMin": -2,
+        "r": 1.9999999999999996,
+        "tCount": 1000,
+        "tMax": 5,
+        "tMin": 0,
+        "velocity": 0,
+        "x0": 0,
+        "xCount": 400,
+        "xMax": 10,
+        "xMin": -10
+    },
+    "potential": "4wMAAAAAAAAAAAAAAAMAAAADAAAAQwAAAHMKAAAAdACgAXwAoQFTACkBTikC2gNqbnDaCnplcm9zX2xpa2UpA9oBeNoBdNoJY29uc3RhbnRzqQByBgAAAPqnL21udC9jL1VzZXJzL21pcnhtL09uZURyaXZlL0VzY3JpdG9yaW8vU3RvcmFnZS9Fc3R1ZGlzL1VCLzhlIFNlbWVzdHJlL1RGRy9CRUMtU29saXRvbi1LYXBpdHphLVBlbmR1bHVtL3Byb2plY3RzL3NpbXVsYXRpb25zL2NvbGxpc2lvbnMvZnJvbnRDb2xsaXNpb24vZnJvbnRDb2xsaXNpb24ucHnaAVYXAAAAcwIAAAAAAQ==",
+    "wave_function": "4wMAAAAAAAAAAAAAAA4AAAAHAAAAQwAAAHPUAAAAZAF8AmQCGQAbAH0DZAF9BHwEZAMTAHwDZAMTABcAZAMbAH0FfAR9BmQEfQd8B2QDEwB8A2QDEwAXAGQDGwB9CHwHfQlkBX0KZAZ9C3wDdACgAWQHfAQUAHwAfAoYABQAZAd8BRQAfAEUABgAoQEUAHQAoAJ8A3wAfAoYAHwGfAEUABgAFAChARsAfQx8A3QAoAFkB3wHFAB8AHwLGAAUAGQHfAgUAHwBFAAYAKEBFAB0AKACfAN8AHwLGAB8CXwBFAAYABQAoQEbAH0NfAx8DRcAUwApCE7pAQAAANoNaGVhbGluZ0xlbmd0aOkCAAAA6f/////p/f///+kDAAAA+QAAAAAAAAAAAAAAAAAA8D8pA9oDam5w2gNleHDaBGNvc2gpDtoBeNoBdNoJY29uc3RhbnRz2gNldGFaBmthcHBhMVoGb21lZ2Ex2gJ2MVoGa2FwcGEyWgZvbWVnYTLaAnYy2gJ4MdoCeDJaA3dmMVoDd2YyqQByEwAAAPqnL21udC9jL1VzZXJzL21pcnhtL09uZURyaXZlL0VzY3JpdG9yaW8vU3RvcmFnZS9Fc3R1ZGlzL1VCLzhlIFNlbWVzdHJlL1RGRy9CRUMtU29saXRvbi1LYXBpdHphLVBlbmR1bHVtL3Byb2plY3RzL3NpbXVsYXRpb25zL2NvbGxpc2lvbnMvZnJvbnRDb2xsaXNpb24vZnJvbnRDb2xsaXNpb24ucHnaDHdhdmVGdW5jdGlvbgQAAABzGAAAAAABDAIEARQBBAIEARQBBAIEAQQCQAFAAQ==",
+    "simulator": "lib.managers.crankNicolson.dimensionless"
+}
